@@ -14,7 +14,7 @@ public class AvaBullet extends Bullet {
 
 	public AvaBullet() {
 		super(ResourceConst.AVA_LEVEL1_BULLET, new AsoulBulletConfig(45, 190));
-		attack = 1050;
+		attack = 280;
 	}
 
 	@Override

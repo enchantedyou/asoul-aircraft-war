@@ -183,7 +183,7 @@ public class Stage1Panel extends JPanel {
 			} else {
 				// 绘制血条
 				if (aircraft.getCamp() == AircraftCamp.ASOUL) {
-					JFrameUtil.drawBlood(g, -37, 8, aircraft);
+					JFrameUtil.drawBlood(g, 60, 28, aircraft);
 				} else {
 					JFrameUtil.drawBlood(g, 0, aircraft.getImage().getHeight() + 10, aircraft);
 				}

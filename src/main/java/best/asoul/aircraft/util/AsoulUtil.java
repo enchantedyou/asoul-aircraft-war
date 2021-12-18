@@ -5,10 +5,7 @@ import java.io.*;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.context.GameContext;
 import best.asoul.aircraft.element.base.Aircraft;
-import best.asoul.aircraft.element.boost.AircraftShieldDriftBoost;
-import best.asoul.aircraft.element.boost.AircraftTreatmentDriftBoost;
-import best.asoul.aircraft.element.boost.BulletLevelUpDriftBoost;
-import best.asoul.aircraft.element.boost.DriftBoot;
+import best.asoul.aircraft.element.boost.*;
 import best.asoul.aircraft.entity.AircraftCamp;
 import best.asoul.aircraft.entity.Quadrant;
 import best.asoul.aircraft.exception.AsoulException;
@@ -106,8 +103,10 @@ public class AsoulUtil {
 			driftBoot = new BulletLevelUpDriftBoost(enemy);
 		} else if (rand(15)) {
 			driftBoot = new AircraftTreatmentDriftBoost(enemy);
-		} else {
+		} else if (rand(10)) {
 			driftBoot = new AircraftShieldDriftBoost(enemy);
+		} else {
+			driftBoot = new AvaDriftBoost(enemy);
 		}
 		GameContext.getStageDefine().getDriftBootList().add(driftBoot);
 	}

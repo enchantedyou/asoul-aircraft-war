@@ -28,8 +28,18 @@ public abstract class Bullet extends Flying implements Serializable {
 	 */
 	public abstract void switchLevel(int level);
 
-	public void setAttack(int attack) {
+	public synchronized void setAttack(int attack) {
 		this.attack = attack;
+	}
+
+	/**
+	 * @Description 攻击力提升
+	 * @Author Enchantedyou
+	 * @Date 2021/12/18-16:41
+	 * @param attack
+	 */
+	public synchronized void increaseAttack(int attack) {
+		this.attack += attack;
 	}
 
 	public int getAttack() {

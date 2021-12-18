@@ -18,8 +18,8 @@ public enum AnimationType {
 	AIRCRAFT_SHIELD("aircraft_shield", 20, 82, 60, 0, 5, true),
 	/** 护盾生效动画 **/
 	SHIELD_PROTECT("shield_protect", 1, 156, 156, 0, 5, true),
-	/** 旋转小向晚 **/
-	AVA_SPIN_ZOOM("ava_spin_zoom", 1, 67, 67, 0, 1, true);
+	/** 向晚觉醒buff动画 **/
+	AVA_AWAKE("ava_awake", 1, 67, 67, 0, 1, true);
 
 	/** 动画的key **/
 	private String key;

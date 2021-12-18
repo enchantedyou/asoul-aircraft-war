@@ -43,6 +43,8 @@ public abstract class Aircraft extends Flying implements Serializable {
 	protected transient List<HoldBoost> holdBoostList = new CopyOnWriteArrayList<>();
 	/** 射击链 **/
 	private ShotChain shotChain = new ShotChain(this);
+	/** 觉醒级别 **/
+	private AtomicInteger awakeLevel = new AtomicInteger(0);
 
 	protected Aircraft(String aircraftImage, Bullet bullet) {
 		super(aircraftImage, new AsoulAircraftConfig());
@@ -157,6 +159,20 @@ public abstract class Aircraft extends Flying implements Serializable {
 		return shotChain;
 	}
 
+	public int getAwakeLevel() {
+		return awakeLevel.get();
+	}
+
+	/**
+	 * @Description 觉醒升级
+	 * @Author Enchantedyou
+	 * @Date 2021/12/18-16:55
+	 * @return int
+	 */
+	public int awakeLevelUp() {
+		return awakeLevel.incrementAndGet();
+	}
+
 	/**
 	 * @Description 初始化生命值
 	 * @Author Enchantedyou
@@ -233,7 +249,7 @@ public abstract class Aircraft extends Flying implements Serializable {
 			this.healthPoint += incrementHp;
 		}
 		if (originalHp != this.healthPoint) {
-			log.info("HP恢复：{}", this.healthPoint - originalHp);
+			log.debug("HP恢复：{}", this.healthPoint - originalHp);
 		}
 	}
 

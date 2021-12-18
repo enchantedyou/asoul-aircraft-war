@@ -8,7 +8,7 @@ import best.asoul.aircraft.entity.AnimationType;
 import best.asoul.aircraft.factory.AnimationResourceFactory;
 
 /**
- * @Description 游离态战机治疗效果
+ * @Description 游离态护盾效果
  * @Author Enchantedyou
  * @Date 2021/12/4-13:34
  */

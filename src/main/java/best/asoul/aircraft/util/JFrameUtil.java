@@ -51,20 +51,21 @@ public class JFrameUtil {
 	 */
 	public static void drawBullet(Graphics g, Bullet bullet, AircraftCamp camp) {
 		final FlyingConfig bulletConfig = bullet.getConfig();
-		BufferedImage image = bullet.getImage();
 		double degrees = getFixedDegrees(bulletConfig.getDegrees());
-		// 在子弹贴图方向是下的情况下，纠正方向，使其以离开飞机的方向运动
-		if (camp == AircraftCamp.ENEMY) {
-			final Quadrant quadrant = getQuadrant(bulletConfig.getDegrees());
-			if (quadrant == Quadrant.NONE) {
-				degrees = -degrees - GlobalConst.MAX_QUADRANT_DEGREES;
-			} else {
-				// 垂直方向的子弹方向纠正：0°时-90°，90°时-180°，180°时-270°，270°时-360°
-				final double multiple = bulletConfig.getDegrees() / GlobalConst.MAX_QUADRANT_DEGREES;
-				degrees = -(multiple + 1D) * GlobalConst.MAX_QUADRANT_DEGREES;
-			}
-			image = rotateImage(bullet.getImage(), degrees);
+		// 纠正子弹角度，在子弹贴图方向是下的情况下，纠正方向，使其以离开飞机的方向运动
+		final Quadrant quadrant = getQuadrant(bulletConfig.getDegrees());
+		if (quadrant == Quadrant.NONE) {
+			degrees = -degrees - GlobalConst.MAX_QUADRANT_DEGREES;
+		} else {
+			// 垂直方向的子弹方向纠正：0°时-90°，90°时-180°，180°时-270°，270°时-360°
+			final double multiple = bulletConfig.getDegrees() / GlobalConst.MAX_QUADRANT_DEGREES;
+			degrees = -(multiple + 1D) * GlobalConst.MAX_QUADRANT_DEGREES;
 		}
+		if (camp == AircraftCamp.ASOUL) {
+			// 玩家的子弹朝上，所以反转
+			degrees += GlobalConst.MAX_QUADRANT_DEGREES * 2;
+		}
+		BufferedImage image = rotateImage(bullet.getImage(), degrees);
 		g.drawImage(image, bulletConfig.getX(), bulletConfig.getY(), null);
 	}
 

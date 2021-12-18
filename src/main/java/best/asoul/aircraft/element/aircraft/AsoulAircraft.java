@@ -17,7 +17,7 @@ public class AsoulAircraft extends Aircraft {
 
 	public AsoulAircraft(String imageKey, Bullet bullet) {
 		super(imageKey, bullet);
-		initHealthPoint(5000 * 10);
+		initHealthPoint(5000);
 		super.camp = AircraftCamp.ASOUL;
 		flyingConfig.determineSize(50, 50);
 	}

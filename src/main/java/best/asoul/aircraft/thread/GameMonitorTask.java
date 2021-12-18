@@ -21,8 +21,5 @@ public class GameMonitorTask implements Runnable {
 		AsoulThreadPoolHelper.gamePauseOrResume();
 
 		// 开始游戏状态监控
-		while (!Thread.currentThread().isInterrupted()) {
-			AsoulUtil.pause(500L);
-		}
 	}
 }
