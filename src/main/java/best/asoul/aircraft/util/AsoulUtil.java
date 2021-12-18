@@ -99,7 +99,7 @@ public class AsoulUtil {
 		}
 
 		DriftBoot driftBoot;
-		if (rand(70)) {
+		if (rand(35)) {
 			driftBoot = new BulletLevelUpDriftBoost(enemy);
 		} else if (rand(15)) {
 			driftBoot = new AircraftTreatmentDriftBoost(enemy);

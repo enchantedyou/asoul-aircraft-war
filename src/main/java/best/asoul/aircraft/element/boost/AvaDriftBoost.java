@@ -10,7 +10,7 @@ import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
 import best.asoul.aircraft.util.AsoulUtil;
 
 /**
- * @Description 游离态，向晚觉醒技：每600ms恢复1%生命值
+ * @Description 游离态，向晚觉醒技：每300ms恢复1%生命值
  * @Author Enchantedyou
  * @Date 2021/12/4-13:33
  */
@@ -28,7 +28,7 @@ public class AvaDriftBoost extends DriftBoot {
 			AsoulThreadPoolHelper.submitGameTask(() -> {
 				while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
 					aircraft.increaseHealthPointPercent(1);
-					AsoulUtil.pause(500L);
+					AsoulUtil.pause(300L);
 				}
 			});
 		} else if (awakeLevel == 2) {

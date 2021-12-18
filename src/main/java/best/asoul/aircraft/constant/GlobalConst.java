@@ -48,7 +48,7 @@ public class GlobalConst {
 	/** 并排子弹间距 **/
 	public static final int BULLET_DISTANCE = 10;
 	/** 敌机阵亡后出现增益效果的概率 **/
-	public static final int BOOST_CREATE_PROBABILITY = 50;
+	public static final int BOOST_CREATE_PROBABILITY = 35;
 	/** 鼠标距离战机距离的上限，超过该距离则不随着鼠标移动，防止作弊 **/
 	public static final int MOUSE_AIRCRAFT_DISTANCE_LIMIT = 800;
 	/** 每个象限的最大角度 **/
