@@ -7,7 +7,7 @@ import best.asoul.aircraft.context.GameContext;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.element.boost.*;
 import best.asoul.aircraft.entity.AircraftCamp;
-import best.asoul.aircraft.entity.Quadrant;
+import best.asoul.aircraft.entity.Direction;
 import best.asoul.aircraft.exception.AsoulException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -94,16 +94,16 @@ public class AsoulUtil {
 	 * @Date 2021/12/4-13:12
 	 */
 	public static void randCreateDriftBoost(Aircraft enemy) {
-		if (enemy.getCamp() != AircraftCamp.ENEMY || !rand(GlobalConst.BOOST_CREATE_PROBABILITY)) {
+		if (enemy.getCamp() == AircraftCamp.ASOUL || !rand(GlobalConst.BOOST_CREATE_PROBABILITY)) {
 			return;
 		}
 
 		DriftBoot driftBoot;
-		if (rand(35)) {
+		if (rand(30)) {
 			driftBoot = new BulletLevelUpDriftBoost(enemy);
 		} else if (rand(15)) {
 			driftBoot = new AircraftTreatmentDriftBoost(enemy);
-		} else if (rand(10)) {
+		} else if (rand(12)) {
 			driftBoot = new AircraftShieldDriftBoost(enemy);
 		} else {
 			driftBoot = new AvaDriftBoost(enemy);
@@ -126,14 +126,44 @@ public class AsoulUtil {
 	}
 
 	/**
-	 * @Description 根据象限计算实际角度
+	 * @Description 计算敌机射击角度
 	 * @Author Enchantedyou
-	 * @Date 2021/12/5-22:15
-	 * @param degrees
-	 * @param quadrant
+	 * @Date 2021/12/19-0:19
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
 	 * @return double
 	 */
-	public static double getActualDegrees(double degrees, Quadrant quadrant) {
-		return degrees + quadrant.degreesOffset();
+	public static double calcEnemyShotDegrees(int x1, int y1, int x2, int y2) {
+		double hypotenuseDistance = calcDistanceBetweenPoints(x1, y1, x2, y2);
+		double horizontalDistance = calcDistanceBetweenPoints(x1, 0, x2, 0);
+
+		final double cosDegrees = Math.toDegrees(Math.acos(horizontalDistance / hypotenuseDistance));
+		final double sinDegrees = Math.toDegrees(Math.asin(horizontalDistance / hypotenuseDistance));
+
+		if (y2 > y1) {
+			if (x2 > x1) {
+				// 第二象限
+				return GlobalConst.MAX_QUADRANT_DEGREES * 2 - cosDegrees;
+			} else if (x2 < x1) {
+				// 第一象限
+				return cosDegrees;
+			} else {
+				return Direction.UP.degrees();
+			}
+		} else if (y2 < y1) {
+			if (x2 > x1) {
+				// 第三象限
+				return GlobalConst.MAX_QUADRANT_DEGREES * 3 - sinDegrees;
+			} else if (x2 < x1) {
+				// 第四象限
+				return GlobalConst.MAX_QUADRANT_DEGREES * 3 + sinDegrees;
+			} else {
+				return Direction.DOWN.degrees();
+			}
+		} else {
+			return x1 > x2 ? Direction.RIGHT.degrees() : Direction.LEFT.degrees();
+		}
 	}
 }

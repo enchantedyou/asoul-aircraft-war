@@ -134,4 +134,40 @@ public class SoundUtil {
 	public static void playAvaPushStream() {
 		SoundResourceFactory.getAudioClip(ResourceConst.AVA_PUSH_STREAM).start();
 	}
+
+	/**
+	 * @Description 玩家觉醒
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:08
+	 */
+	public static void playPlayerAwake() {
+		SoundResourceFactory.getAudioClip(ResourceConst.AWAKE).start();
+	}
+
+	/**
+	 * @Description 防御
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:08
+	 */
+	public static void playDefense() {
+		SoundResourceFactory.getAudioClip(ResourceConst.DEFENSE).start();
+	}
+
+	/**
+	 * @Description 治疗
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:08
+	 */
+	public static void playTreat() {
+		SoundResourceFactory.getAudioClip(ResourceConst.TREAT).start();
+	}
+
+	/**
+	 * @Description 缓慢愈合
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:09
+	 */
+	public static void playSlowHeal() {
+		SoundResourceFactory.getAudioClip(ResourceConst.SLOW_HEAL).start();
+	}
 }

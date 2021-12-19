@@ -1,6 +1,7 @@
 package best.asoul.aircraft.define;
 
 import best.asoul.aircraft.element.aircraft.*;
+import best.asoul.aircraft.entity.AircraftCamp;
 import best.asoul.aircraft.handler.aircraft.EnemyAircraftCreateHandler;
 import best.asoul.aircraft.util.AsoulUtil;
 
@@ -9,7 +10,7 @@ import best.asoul.aircraft.util.AsoulUtil;
  * @Author Enchantedyou
  * @Date 2021年11月22日-22:31
  */
-public final class Stage1Define extends StageDefine {
+public final class DefaultStageDefine extends StageDefine {
 
 	@Override
 	protected void enemyCreateHandler() {
@@ -19,7 +20,6 @@ public final class Stage1Define extends StageDefine {
 		EnemyBlueLevel2 blueLevel2 = new EnemyBlueLevel2();
 		EnemyPurpleLevel2 purpleLevel2 = new EnemyPurpleLevel2();
 		EnemyWhiteLevel2 whiteLevel2 = new EnemyWhiteLevel2();
-
 		// 第一关
 		createStage1(blueLevel1, redLevel1, blueLevel2, purpleLevel2, whiteLevel2);
 	}
@@ -47,18 +47,19 @@ public final class Stage1Define extends StageDefine {
 		// 4蓝lv2，1白lv2
 		createEnemy(blueLevel2, whiteLevel2, 5);
 		// boss
-		createBoss(new EnemyBlueLevel2(500000));
+		createBoss(new BossToolsPeople());
 	}
 
 	private void createEnemy(EnemyAircraft enemyAircraft, EnemyAircraft mid, int count) {
-		EnemyAircraftCreateHandler handler = new EnemyAircraftCreateHandler(false, count, enemyAircraft,
+		EnemyAircraftCreateHandler handler = new EnemyAircraftCreateHandler(count, enemyAircraft,
 				mid, enemyList);
 		handler.setBeforeNextHandleInvoker(this::awaitAllEnemyDestroyed);
 		enemyCreateChain.append(handler);
 	}
 
 	private void createBoss(EnemyAircraft boss) {
-		EnemyAircraftCreateHandler handler = new EnemyAircraftCreateHandler(true, 1, boss, null, enemyList);
+		boss.setCamp(AircraftCamp.BOSS);
+		EnemyAircraftCreateHandler handler = new EnemyAircraftCreateHandler(1, boss, null, enemyList);
 		handler.setBeforeNextHandleInvoker(this::awaitAllEnemyDestroyed);
 		enemyCreateChain.append(handler);
 	}

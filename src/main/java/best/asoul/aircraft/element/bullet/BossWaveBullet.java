@@ -5,15 +5,15 @@ import best.asoul.aircraft.constant.ResourceConst;
 import best.asoul.aircraft.element.base.Bullet;
 
 /**
- * @Description 小矩形子弹
+ * @Description boss波形子弹
  * @Author Enchantedyou
- * @Date 2021/11/27-23:28
+ * @Date 2021/12/19-21:54
  */
-public class LittleRectangleBullet extends Bullet {
+public class BossWaveBullet extends Bullet {
 
-	public LittleRectangleBullet() {
-		super(ResourceConst.LITTLE_RECTANGLE_BULLET, new EnemyBulletConfig(30, 30));
-		attack = 150;
+	public BossWaveBullet() {
+		super(ResourceConst.BOSS_WAVE_BULLET, new EnemyBulletConfig(135, 160));
+		attack = 750;
 	}
 
 	@Override

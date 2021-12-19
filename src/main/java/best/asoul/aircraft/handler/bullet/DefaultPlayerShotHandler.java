@@ -1,5 +1,7 @@
 package best.asoul.aircraft.handler.bullet;
 
+import java.util.Collections;
+
 import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.element.base.Aircraft;
@@ -16,7 +18,7 @@ import best.asoul.aircraft.util.AsoulUtil;
 public class DefaultPlayerShotHandler extends ShotHandler {
 
 	public DefaultPlayerShotHandler() {
-		super(AircraftCamp.ASOUL, 0, 0L);
+		super(Collections.singletonList(AircraftCamp.ASOUL), 0, 0L);
 	}
 
 	@Override

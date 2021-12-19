@@ -8,6 +8,7 @@ import best.asoul.aircraft.entity.AnimationType;
 import best.asoul.aircraft.factory.AnimationResourceFactory;
 import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
 import best.asoul.aircraft.util.AsoulUtil;
+import best.asoul.aircraft.util.SoundUtil;
 
 /**
  * @Description 游离态，向晚觉醒技：每300ms恢复1%生命值
@@ -24,6 +25,7 @@ public class AvaDriftBoost extends DriftBoot {
 	public void boostAfter(Aircraft aircraft) {
 		final int awakeLevel = aircraft.awakeLevelUp();
 		if (awakeLevel == 1) {
+			SoundUtil.playSlowHeal();
 			// 一级觉醒，持续生命回复
 			AsoulThreadPoolHelper.submitGameTask(() -> {
 				while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
@@ -32,14 +34,16 @@ public class AvaDriftBoost extends DriftBoot {
 				}
 			});
 		} else if (awakeLevel == 2) {
-			// 二级觉醒：子弹攻击力翻倍，数量翻倍，散射
-			aircraft.getBullet().increaseAttack(aircraft.getBullet().getAttack());
+			SoundUtil.playPlayerAwake();
+			// 二级觉醒：子弹攻击力提升50%，数量翻倍，散射
+			aircraft.getBullet().increaseAttack(aircraft.getBullet().getAttack() / 2);
 		} else {
 			// 后续觉醒：子弹升级
 			if (aircraft.bulletLevelUp() && duration > 0L) {
 				// 如果暴走则添加持有效果
 				aircraft.endowBoost(new EnergyRestoredHoldBoost(duration), duration);
 			}
+			SoundUtil.playPlayerAwake();
 		}
 	}
 

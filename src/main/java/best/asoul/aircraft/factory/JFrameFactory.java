@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import best.asoul.aircraft.component.AsoulJFrame;
 import best.asoul.aircraft.component.MenuPanel;
-import best.asoul.aircraft.component.stage.Stage1Panel;
+import best.asoul.aircraft.component.stage.StagePanel;
 import best.asoul.aircraft.invoker.Invoker;
 import best.asoul.aircraft.listener.GameProcessControlListener;
 
@@ -35,7 +35,7 @@ public class JFrameFactory {
 	 * @param afterCreateInvoker
 	 */
 	public static void createStage1JFrame(Invoker afterCreateInvoker) {
-		createJFrame(new Stage1Panel(), afterCreateInvoker);
+		createJFrame(new StagePanel(), afterCreateInvoker);
 	}
 
 	private static void createJFrame(JPanel jPanel, Invoker afterCreateInvoker) {

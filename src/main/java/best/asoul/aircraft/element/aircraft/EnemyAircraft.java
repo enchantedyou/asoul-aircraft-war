@@ -32,7 +32,7 @@ public abstract class EnemyAircraft extends Aircraft {
 		shotChain.append(new ShotToPlayerDirectionHandler(30, 30, 18, 0, 500L));
 	}
 
-	public EnemyAircraft(String imageKey, Bullet bullet, int maxHealthPoint) {
+	protected EnemyAircraft(String imageKey, Bullet bullet, int maxHealthPoint) {
 		super(imageKey, bullet);
 		initBaseInfo(maxHealthPoint);
 	}
@@ -52,6 +52,8 @@ public abstract class EnemyAircraft extends Aircraft {
 			flyingConfig.determineSize(140, 135);
 		} else if (ResourceConst.ENEMY_LEVEL2_WHITE_AIRCRAFT.equals(imageKey)) {
 			flyingConfig.determineSize(245, 300);
+		} else if (ResourceConst.BOSS_TOOLS_PEOPLE.equals(imageKey)) {
+			flyingConfig.determineSize(300, 300);
 		}
 	}
 

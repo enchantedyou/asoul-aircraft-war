@@ -1,6 +1,7 @@
 package best.asoul.aircraft.handler.bullet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import best.asoul.aircraft.constant.GlobalConst;
@@ -28,7 +29,7 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 			long turnInterval,
 			boolean shotTogether,
 			int bulletSpeed) {
-		super(AircraftCamp.ENEMY, turnCount, turnInterval);
+		super(Arrays.asList(AircraftCamp.ENEMY, AircraftCamp.BOSS), turnCount, turnInterval);
 		if (turnCount <= 0 && shotTogether) {
 			throw new IllegalArgumentException("齐射时发射轮数必须大于0");
 		}
@@ -49,16 +50,18 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 			int y = GlobalConst.RANDOM.nextInt(aircraft.getImage().getHeight()) + aircraft.getConfig().getY();
 
 			for (double d = 0D; d < GlobalConst.DEGREES_OF_CIRCLE; d += degreesOffset) {
+				if (aircraft.isDead()) {
+					return;
+				}
+
 				final Bullet bullet = createBullet(aircraft);
 				bullet.getConfig().setDegrees(d);
 				bullet.moveTo(x, y);
 				if (!shotTogether) {
 					bullet.getConfig().setSpeed(speed);
 				}
-
 				toRecoverySpeedBulletList.add(bullet);
 			}
-
 			if (turnCount != 0 && c-- <= 0) {
 				break;
 			}

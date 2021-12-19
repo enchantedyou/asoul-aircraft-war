@@ -96,10 +96,10 @@ public class JFrameUtil {
 		int w = bufferedimage.getWidth();
 		int h = bufferedimage.getHeight();
 		int type = bufferedimage.getColorModel().getTransparency();
+
 		BufferedImage img = new BufferedImage(w, h, type);
 		Graphics2D g = img.createGraphics();
-		g.setRenderingHint(
-				RenderingHints.KEY_INTERPOLATION,
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.rotate(Math.toRadians(degree), w / 2D, h / 2D);
 		g.drawImage(bufferedimage, 0, 0, null);
@@ -138,7 +138,11 @@ public class JFrameUtil {
 		final FlyingConfig aircraftConfig = aircraft.getConfig();
 
 		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
-			image = ImageResourceFactory.getImage(ResourceConst.PLAYER_BLOOD_LINE);
+			if (widthPercent > GlobalConst.SAFE_BLOOD_PERCENT) {
+				image = ImageResourceFactory.getImage(ResourceConst.PLAYER_SAFE_BLOOD_LINE);
+			} else {
+				image = ImageResourceFactory.getImage(ResourceConst.PLAYER_DANGER_BLOOD_LINE);
+			}
 			x += (GlobalConfig.SCREEN_WIDTH - image.getWidth()) / 2;
 		} else {
 			image = ImageResourceFactory.getImage(ResourceConst.ENEMY_BLOOD_LINE);

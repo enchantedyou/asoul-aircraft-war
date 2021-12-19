@@ -91,20 +91,6 @@ public abstract class Aircraft extends Flying implements Serializable {
 	}
 
 	/**
-	 * @Description 子弹增强
-	 * @Author Enchantedyou
-	 * @Date 2021/11/29-21:42
-	 */
-	protected synchronized void bulletBoost() {
-		final FlyingConfig bulletConfig = bullet.getConfig();
-		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() - 4);
-		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() - 100);
-		bulletConfig.increaseSpeed(+25D);
-		// 子弹攻击力减半
-		bullet.setAttack(bullet.getAttack() / 2);
-	}
-
-	/**
 	 * @Description 子弹恢复
 	 * @Author Enchantedyou
 	 * @Date 2021/11/29-21:43
@@ -116,6 +102,20 @@ public abstract class Aircraft extends Flying implements Serializable {
 		bulletConfig.increaseSpeed(-25D);
 		// 子弹攻击力恢复
 		bullet.setAttack(bullet.getAttack() * 2);
+	}
+
+	/**
+	 * @Description 子弹增强
+	 * @Author Enchantedyou
+	 * @Date 2021/11/29-21:42
+	 */
+	protected synchronized void bulletBoost() {
+		final FlyingConfig bulletConfig = bullet.getConfig();
+		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() - 4);
+		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() - 100);
+		bulletConfig.increaseSpeed(+25D);
+		// 子弹攻击力减半
+		bullet.setAttack(bullet.getAttack() / 2);
 	}
 
 	/**

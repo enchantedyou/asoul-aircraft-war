@@ -20,6 +20,10 @@ public class BulletCreateTask implements Runnable {
 
 	@Override
 	public void run() {
-		aircraft.getShotChain().doChain();
+		try {
+			aircraft.getShotChain().doChain();
+		} catch (Exception e) {
+			log.error("子弹创建失败", e);
+		}
 	}
 }

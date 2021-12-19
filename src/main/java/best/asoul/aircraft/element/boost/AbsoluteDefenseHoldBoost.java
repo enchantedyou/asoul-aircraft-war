@@ -23,9 +23,16 @@ public class AbsoluteDefenseHoldBoost extends HoldBoost {
 	public void boostExpiredAfter(Aircraft aircraft) {
 		// 清除敌方所有子弹
 		for (Aircraft enemy : GameContext.getStageDefine().getEnemyList()) {
-			if (enemy.getCamp() != AircraftCamp.ASOUL) {
-				enemy.getShotList().clear();
-			}
+			clearBullet(enemy);
+		}
+		for (Aircraft enemy : GameContext.getStageDefine().getToBeRemovedAircraftList()) {
+			clearBullet(enemy);
+		}
+	}
+
+	private void clearBullet(Aircraft enemy) {
+		if (enemy.getCamp() != AircraftCamp.ASOUL) {
+			enemy.getShotList().clear();
 		}
 	}
 

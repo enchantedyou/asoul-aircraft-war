@@ -6,6 +6,7 @@ import best.asoul.aircraft.element.base.Flying;
 import best.asoul.aircraft.entity.AnimationEffectPlayer;
 import best.asoul.aircraft.entity.AnimationType;
 import best.asoul.aircraft.factory.AnimationResourceFactory;
+import best.asoul.aircraft.util.SoundUtil;
 
 /**
  * @Description 游离态战机治疗效果
@@ -21,6 +22,7 @@ public class AircraftTreatmentDriftBoost extends DriftBoot {
 
 	@Override
 	public void boostAfter(Aircraft aircraft) {
+		SoundUtil.playTreat();
 		// 血量增加20%
 		aircraft.increaseHealthPointPercent(20);
 	}

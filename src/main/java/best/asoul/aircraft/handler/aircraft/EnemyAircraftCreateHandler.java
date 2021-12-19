@@ -8,6 +8,7 @@ import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.config.GlobalConfig;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.element.base.Aircraft;
+import best.asoul.aircraft.entity.AircraftCamp;
 import best.asoul.aircraft.util.AsoulUtil;
 import best.asoul.aircraft.util.SoundUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -22,30 +23,27 @@ public class EnemyAircraftCreateHandler extends AircraftCreateHandler {
 
 	/** 中间的飞机 **/
 	private Aircraft midAircraft;
-	/** 是否为boss **/
-	private boolean boss;
 	private static Map<Integer, Integer> midCountMap = new ConcurrentHashMap<>();
 	/** 插入中间不同飞机最小支持的count **/
 	private static final int MIN_SUPPORT_MID_COUNT = 3;
 	/** 插入中间不同飞机最大支持的count **/
 	private static final int MAX_SUPPORT_MID_COUNT = 9;
 
-	public EnemyAircraftCreateHandler(boolean boss, int count, Aircraft aircraft, Aircraft midAircraft,
+	public EnemyAircraftCreateHandler(int count, Aircraft aircraft, Aircraft midAircraft,
 			List<Aircraft> aircraftList) {
 		super(count, aircraft, aircraftList);
 		this.midAircraft = midAircraft;
-		this.boss = boss;
 		initMidCountMap();
 	}
 
-	public EnemyAircraftCreateHandler(boolean boss, int count, Aircraft aircraft, List<Aircraft> aircraftList) {
-		this(boss, count, aircraft, null, aircraftList);
+	public EnemyAircraftCreateHandler(int count, Aircraft aircraft, List<Aircraft> aircraftList) {
+		this(count, aircraft, null, aircraftList);
 	}
 
 	@Override
 	public void create() {
 		// boss出现前播放告警音效并卖几秒钟关子
-		if (boss) {
+		if (aircraft.getCamp() == AircraftCamp.BOSS) {
 			AsoulUtil.pause(1500L);
 			SoundUtil.stopBgm();
 			SoundUtil.playBossWarning();

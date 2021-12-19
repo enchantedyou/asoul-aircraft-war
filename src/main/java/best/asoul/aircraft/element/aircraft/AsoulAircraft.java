@@ -19,7 +19,7 @@ public class AsoulAircraft extends Aircraft {
 		super(imageKey, bullet);
 		initHealthPoint(5000);
 		super.camp = AircraftCamp.ASOUL;
-		flyingConfig.determineSize(50, 50);
+		flyingConfig.determineSize(30, 30);
 	}
 
 	@Override
@@ -50,6 +50,5 @@ public class AsoulAircraft extends Aircraft {
 	private void triggerEnergyRestored() {
 		// 触发暴走
 		bulletLevel.getAndSet(GlobalConst.ENERGY_RESTORED_LEVEL);
-		SoundUtil.playEnergyRestored();
 	}
 }

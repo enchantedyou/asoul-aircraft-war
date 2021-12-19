@@ -10,5 +10,7 @@ public enum AircraftCamp {
 	/** 一个魂 **/
 	ASOUL,
 	/** 敌对 **/
-	ENEMY
+	ENEMY,
+	/** BOSS **/
+	BOSS
 }

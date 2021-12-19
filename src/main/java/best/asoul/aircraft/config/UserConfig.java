@@ -13,7 +13,7 @@ public class UserConfig {
 	/** 帧率 **/
 	public static final int FRAME_RATE = 90;
 	/** 背景音乐音量 **/
-	public static final int BGM_VOLUME = 85;
+	public static final int BGM_VOLUME = 55;
 	/** 音效音量 **/
-	public static final int EFFECT_VOLUME = 80;
+	public static final int EFFECT_VOLUME = 55;
 }

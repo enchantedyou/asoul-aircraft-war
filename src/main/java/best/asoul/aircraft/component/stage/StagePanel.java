@@ -10,7 +10,7 @@ import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.config.GlobalConfig;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.constant.ResourceConst;
-import best.asoul.aircraft.define.Stage1Define;
+import best.asoul.aircraft.define.DefaultStageDefine;
 import best.asoul.aircraft.define.StageDefine;
 import best.asoul.aircraft.element.aircraft.AsoulAircraft;
 import best.asoul.aircraft.element.base.Aircraft;
@@ -35,11 +35,11 @@ import lombok.extern.slf4j.Slf4j;
  * @Date 2021年11月20日-01:04
  */
 @Slf4j
-public class Stage1Panel extends JPanel {
+public class StagePanel extends JPanel {
 
-	private transient StageDefine stageDefine = new Stage1Define();
+	private transient StageDefine stageDefine = new DefaultStageDefine();
 
-	public Stage1Panel() {
+	public StagePanel() {
 		// 生成玩家战机
 		AsoulAircraft avaAircraft = new AsoulAircraft(ResourceConst.AVA_AIRCRAFT, new AvaBullet());
 		stageDefine.startStage(avaAircraft);

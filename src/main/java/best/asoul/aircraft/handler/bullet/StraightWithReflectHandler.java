@@ -1,5 +1,6 @@
 package best.asoul.aircraft.handler.bullet;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import best.asoul.aircraft.element.base.Aircraft;
@@ -27,7 +28,7 @@ public class StraightWithReflectHandler extends ShotHandler {
 
 	public StraightWithReflectHandler(boolean leftRightReflect, int bulletSpeed, long duration, long shotInterval,
 			Double... degreesOptions) {
-		super(AircraftCamp.ENEMY, 0, 0L);
+		super(Arrays.asList(AircraftCamp.ENEMY, AircraftCamp.BOSS), 0, 0L);
 		this.degreesOptions = Objects.requireNonNull(degreesOptions);
 		this.bulletSpeed = bulletSpeed;
 		this.shotInterval = shotInterval;
@@ -40,6 +41,10 @@ public class StraightWithReflectHandler extends ShotHandler {
 		long startTime = System.currentTimeMillis();
 		while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
 			for (double degrees : degreesOptions) {
+				if (aircraft.isDead()) {
+					return;
+				}
+
 				final Bullet bullet = createBullet(aircraft);
 				bullet.getConfig().setDegrees(degrees);
 				bullet.setLeftRightReflect(leftRightReflect);
