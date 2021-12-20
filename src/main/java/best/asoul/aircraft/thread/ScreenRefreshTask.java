@@ -8,6 +8,7 @@ import best.asoul.aircraft.config.UserConfig;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
 import best.asoul.aircraft.util.AsoulUtil;
+import best.asoul.aircraft.util.SoundUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,6 +49,8 @@ public class ScreenRefreshTask implements Runnable {
 						threadPool.getLargestPoolSize());
 				// 定期清理已完成的核心线程数外的线程
 				AsoulThreadPoolHelper.getTaskList().removeIf(thread -> thread.getState() == Thread.State.TERMINATED);
+				// 定期清理失效的声音切片
+				log.info("清理失效的音效资源数：{}", SoundUtil.clearInvalidClip());
 			}
 		}
 	}

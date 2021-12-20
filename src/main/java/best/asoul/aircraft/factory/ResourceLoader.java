@@ -1,6 +1,7 @@
 package best.asoul.aircraft.factory;
 
 import java.io.File;
+import java.net.URL;
 
 import best.asoul.aircraft.invoker.FileLoadInvoker;
 
@@ -42,7 +43,7 @@ public class ResourceLoader {
 	 * @Date 2021/11/20-13:33
 	 */
 	public static void loadImage() {
-		loadFile(ResourceLoader.class.getResource("/image").getPath(), ImageResourceFactory::fillImageResource);
+		loadFile(getRootPath("/image"), ImageResourceFactory::fillImageResource);
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class ResourceLoader {
 	 * @Date 2021/11/26-21:05
 	 */
 	public static void loadSound() {
-		loadFile(ResourceLoader.class.getResource("/sound").getPath(), SoundResourceFactory::fillAudioResource);
+		loadFile(getRootPath("/sound"), SoundResourceFactory::fillAudioResource);
 	}
 
 	/**
@@ -60,7 +61,14 @@ public class ResourceLoader {
 	 * @Date 2021/11/27-17:58
 	 */
 	public static void loadAnimation() {
-		loadFile(ResourceLoader.class.getResource("/animation").getPath(),
-				AnimationResourceFactory::fillAnimationResource);
+		loadFile(getRootPath("/animation"), AnimationResourceFactory::fillAnimationResource);
+	}
+
+	private static String getRootPath(String relativePath) {
+		final URL url = ResourceLoader.class.getResource("/");
+		if (url != null) {
+			return url.getPath() + relativePath;
+		}
+		return System.getProperty("user.dir") + "/bin" + relativePath;
 	}
 }

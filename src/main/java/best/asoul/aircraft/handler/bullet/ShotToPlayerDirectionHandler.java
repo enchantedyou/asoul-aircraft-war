@@ -42,7 +42,7 @@ public class ShotToPlayerDirectionHandler extends ShotHandler {
 		while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
 			shotATurn(aircraft);
 
-			if (turnCount != 0 && c-- <= 0) {
+			if (turnCount != 0 && --c <= 0) {
 				break;
 			}
 			AsoulUtil.pause(turnInterval);

@@ -49,7 +49,7 @@ public class JFrameUtil {
 	 * @param g
 	 * @param bullet
 	 */
-	public static void drawBullet(Graphics g, Bullet bullet, AircraftCamp camp) {
+	public static void drawBullet(Graphics2D g, Bullet bullet, Aircraft aircraft) {
 		final FlyingConfig bulletConfig = bullet.getConfig();
 		double degrees = getFixedDegrees(bulletConfig.getDegrees());
 		// 纠正子弹角度，在子弹贴图方向是下的情况下，纠正方向，使其以离开飞机的方向运动
@@ -61,12 +61,17 @@ public class JFrameUtil {
 			final double multiple = bulletConfig.getDegrees() / GlobalConst.MAX_QUADRANT_DEGREES;
 			degrees = -(multiple + 1D) * GlobalConst.MAX_QUADRANT_DEGREES;
 		}
-		if (camp == AircraftCamp.ASOUL) {
+		final Composite originalComposite = g.getComposite();
+		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
 			// 玩家的子弹朝上，所以反转
 			degrees += GlobalConst.MAX_QUADRANT_DEGREES * 2;
+			// 玩家子弹透明度（暴走时变亮一点）
+			float alpha = aircraft.getBulletLevel() < GlobalConst.ENERGY_RESTORED_LEVEL ? 0.5f : 0.7f;
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		}
 		BufferedImage image = rotateImage(bullet.getImage(), degrees);
 		g.drawImage(image, bulletConfig.getX(), bulletConfig.getY(), null);
+		g.setComposite(originalComposite);
 	}
 
 	/**

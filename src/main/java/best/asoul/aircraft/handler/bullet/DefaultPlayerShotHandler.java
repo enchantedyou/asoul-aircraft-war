@@ -68,10 +68,10 @@ public class DefaultPlayerShotHandler extends ShotHandler {
 	private boolean awakeBullet(Aircraft aircraft) {
 		int bulletCount = aircraft.getBulletLevel() == GlobalConst.BULLET_LEVEL_1 ? 3 : 5;
 		// 从30°到150°散射
-		final double maxRightDegrees = 30D;
-		final double maxLeftDegrees = 150D;
-		// 觉醒时不触发散射
-		if (aircraft.getAwakeLevel() >= 2 && aircraft.getBulletLevel() < GlobalConst.ENERGY_RESTORED_LEVEL) {
+		final double maxRightDegrees = 45D;
+		final double maxLeftDegrees = 135D;
+		// 暴走时也触发散射
+		if (aircraft.getAwakeLevel() >= 2) {
 			bulletCount *= 2;
 			double degreesOffset = (maxLeftDegrees - maxRightDegrees) / bulletCount;
 			for (int i = 0; i < bulletCount + 1; i++) {

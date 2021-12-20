@@ -98,10 +98,10 @@ public abstract class Aircraft extends Flying implements Serializable {
 	protected synchronized void bulletRecover() {
 		final FlyingConfig bulletConfig = bullet.getConfig();
 		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() + 4);
-		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() + 100);
-		bulletConfig.increaseSpeed(-25D);
+		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() + 120);
+		bulletConfig.increaseSpeed(-10D);
 		// 子弹攻击力恢复
-		bullet.setAttack(bullet.getAttack() * 2);
+		// bullet.setAttack(bullet.getAttack() * 2);
 	}
 
 	/**
@@ -112,10 +112,10 @@ public abstract class Aircraft extends Flying implements Serializable {
 	protected synchronized void bulletBoost() {
 		final FlyingConfig bulletConfig = bullet.getConfig();
 		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() - 4);
-		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() - 100);
-		bulletConfig.increaseSpeed(+25D);
+		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() - 120);
+		bulletConfig.increaseSpeed(+10D);
 		// 子弹攻击力减半
-		bullet.setAttack(bullet.getAttack() / 2);
+		// bullet.setAttack(bullet.getAttack() / 2);
 	}
 
 	/**

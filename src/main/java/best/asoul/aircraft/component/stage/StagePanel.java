@@ -202,7 +202,7 @@ public class StagePanel extends JPanel {
 		JFrameUtil.drawAircraft(g, aircraft);
 		// 绘制子弹
 		for (Bullet bullet : aircraft.getShotList()) {
-			JFrameUtil.drawBullet(g, bullet, aircraft.getCamp());
+			JFrameUtil.drawBullet(g, bullet, aircraft);
 		}
 	}
 

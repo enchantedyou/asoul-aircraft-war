@@ -62,7 +62,7 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 				}
 				toRecoverySpeedBulletList.add(bullet);
 			}
-			if (turnCount != 0 && c-- <= 0) {
+			if (turnCount != 0 && --c <= 0) {
 				break;
 			}
 			AsoulUtil.pause(turnInterval);

@@ -22,7 +22,7 @@ public class BossToolsPeople extends EnemyAircraft {
 	}
 
 	public BossToolsPeople() {
-		this(1050000);
+		this(1888888);
 	}
 
 	@Override
@@ -34,12 +34,12 @@ public class BossToolsPeople extends EnemyAircraft {
 					-120D, -150D);
 			s1.setBeforeNextHandleInvoker(() -> setBullet(new MidArcBullet()));
 			shotChain.append(s1);
-			shotChain.append(new ShotToPlayerDirectionHandler(25, 40, 30, 5, 1000L));
+			shotChain.append(new ShotToPlayerDirectionHandler(25, 40, 30, 3, 1000L));
 			final WhirlpoolSpreadShotHandler s2 = new WhirlpoolSpreadShotHandler(15, 3, 1200L, true, 10);
 			s2.setBeforeNextHandleInvoker(() -> setBullet(new LittleBallBullet()));
 			shotChain.append(s2);
 			shotChain.append(new WhirlpoolSpreadShotHandler(10, 3, 1500L, false, 10));
-			final ShotToPlayerDirectionHandler s3 = new ShotToPlayerDirectionHandler(10, 30, 45, 2, 100L);
+			final ShotToPlayerDirectionHandler s3 = new ShotToPlayerDirectionHandler(30, 30, 45, 2, 100L);
 			s3.setBeforeNextHandleInvoker(() -> setBullet(new LongOvalBullet()));
 			shotChain.append(s3);
 			shotChain.append(new ShotToPlayerDirectionHandler(50, 20, 25, 2, 1000L));

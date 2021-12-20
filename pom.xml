@@ -37,11 +37,6 @@
             <version>1.7.32</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.71</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
@@ -65,6 +60,10 @@
                     </archive>
                     <excludes>
                         <exclude>/**/*.properties</exclude>
+                        <exclude>/**/*.png</exclude>
+                        <exclude>/**/*.jpg</exclude>
+                        <exclude>/**/*.wav</exclude>
+                        <exclude>/**/*.xml</exclude>
                         <exclude>META-INF/**</exclude>
                     </excludes>
                 </configuration>
