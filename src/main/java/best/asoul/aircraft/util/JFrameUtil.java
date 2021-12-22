@@ -36,10 +36,15 @@ public class JFrameUtil {
 		if (aircraft.isDead()) {
 			return;
 		}
-		BufferedImage image;
+		final BufferedImage image = aircraft.getImage();
 		final FlyingConfig aircraftConfig = aircraft.getConfig();
-		image = aircraft.getImage();
 		g.drawImage(image, aircraftConfig.getX(), aircraftConfig.getY(), null);
+		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
+			// 画尾焰
+			final BufferedImage tailFlameImage = ImageResourceFactory.getImage(ResourceConst.TAIL_FLAME);
+			g.drawImage(tailFlameImage, aircraftConfig.getX() + 10, aircraftConfig.getY() + image.getHeight(), null);
+			g.drawImage(tailFlameImage, aircraftConfig.getX() + 40, aircraftConfig.getY() + image.getHeight(), null);
+		}
 	}
 
 	/**
@@ -66,7 +71,7 @@ public class JFrameUtil {
 			// 玩家的子弹朝上，所以反转
 			degrees += GlobalConst.MAX_QUADRANT_DEGREES * 2;
 			// 玩家子弹透明度（暴走时变亮一点）
-			float alpha = aircraft.getBulletLevel() < GlobalConst.ENERGY_RESTORED_LEVEL ? 0.5f : 0.7f;
+			float alpha = aircraft.getBulletLevel() < GlobalConst.ENERGY_RESTORED_LEVEL ? 0.7f : 0.8f;
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		}
 		BufferedImage image = rotateImage(bullet.getImage(), degrees);

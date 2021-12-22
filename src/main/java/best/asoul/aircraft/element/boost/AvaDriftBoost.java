@@ -1,12 +1,13 @@
 package best.asoul.aircraft.element.boost;
 
 import best.asoul.aircraft.config.boost.BoostConfig;
+import best.asoul.aircraft.constant.ResourceConst;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.element.base.Flying;
 import best.asoul.aircraft.entity.AnimationEffectPlayer;
 import best.asoul.aircraft.entity.AnimationType;
 import best.asoul.aircraft.factory.AnimationResourceFactory;
-import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import best.asoul.aircraft.util.AsoulUtil;
 import best.asoul.aircraft.util.SoundUtil;
 
@@ -27,7 +28,7 @@ public class AvaDriftBoost extends DriftBoot {
 		if (awakeLevel == 1) {
 			SoundUtil.playSlowHeal();
 			// 一级觉醒，持续生命回复
-			AsoulThreadPoolHelper.submitGameTask(() -> {
+			AsoulThreadHelper.submitTask(() -> {
 				while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
 					aircraft.increaseHealthPointPercent(1);
 					AsoulUtil.pause(300L);
@@ -37,6 +38,8 @@ public class AvaDriftBoost extends DriftBoot {
 			SoundUtil.playPlayerAwake();
 			// 二级觉醒：子弹攻击力提升50%，数量翻倍，散射
 			aircraft.getBullet().increaseAttack(aircraft.getBullet().getAttack() / 2);
+			// 切换为雨点子弹
+			aircraft.getBullet().setImageKey(ResourceConst.AVA_RAINDROPS_BULLET);
 		} else {
 			// 后续觉醒：子弹升级
 			if (aircraft.bulletLevelUp() && duration > 0L) {

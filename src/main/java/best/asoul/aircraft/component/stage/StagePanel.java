@@ -25,7 +25,7 @@ import best.asoul.aircraft.factory.ImageResourceFactory;
 import best.asoul.aircraft.invoker.CollideAfterInvoker;
 import best.asoul.aircraft.listener.AircraftMouseListener;
 import best.asoul.aircraft.thread.ScreenRefreshTask;
-import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import best.asoul.aircraft.util.JFrameUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +50,7 @@ public class StagePanel extends JPanel {
 		this.addMouseListener(mouseListener);
 		this.addMouseMotionListener(mouseListener);
 		// 提交画面刷新的线程
-		AsoulThreadPoolHelper.submitNoPauseTask(new ScreenRefreshTask(this));
+		AsoulThreadHelper.submitTask(new ScreenRefreshTask(this));
 	}
 
 	@Override
@@ -111,23 +111,9 @@ public class StagePanel extends JPanel {
 			for (Aircraft enemy : enemyList) {
 				final FlyingConfig enemyConfig = enemy.getConfig();
 				final List<Bullet> enemyShotList = enemy.getShotList();
+				// 检查敌我战机碰撞以及玩家子弹命中
+				checkCollisionAndPlayerShot(player, playerConfig, playerShotList, enemy, enemyConfig);
 
-				if (!enemy.isDead()) {
-					// 飞机碰撞->玩家扣血
-					doCollisionCheck(player.getImage(), enemy.getImage(), playerConfig, enemyConfig,
-							() -> player.deductHealthPointCollision(GlobalConst.COLLISION_DEDUCT_NORMAL));
-					for (Bullet playerBullet : playerShotList) {
-						// 玩家子弹击中敌机
-						doCollisionCheck(playerBullet.getImage(), enemy.getImage(), playerBullet.getConfig(),
-								enemyConfig,
-								() -> {
-									// 敌机扣血
-									enemy.deductHealthPoint(playerBullet);
-									// 移除子弹
-									playerShotList.remove(playerBullet);
-								});
-					}
-				}
 				for (Bullet enemyBullet : enemyShotList) {
 					// 敌机子弹击中玩家
 					doCollisionCheck(player.getImage(), enemyBullet.getImage(), playerConfig, enemyBullet.getConfig(),
@@ -138,6 +124,28 @@ public class StagePanel extends JPanel {
 								enemyShotList.remove(enemyBullet);
 							});
 				}
+			}
+		}
+	}
+
+	private void checkCollisionAndPlayerShot(Aircraft player, FlyingConfig playerConfig, List<Bullet> playerShotList,
+			Aircraft enemy, FlyingConfig enemyConfig) {
+		if (!enemy.isDead()) {
+			// 飞机碰撞->玩家扣血
+			doCollisionCheck(player.getImage(), enemy.getImage(), playerConfig, enemyConfig,
+					() -> player.deductHealthPointCollision(
+							enemy.getCamp() == AircraftCamp.BOSS ? GlobalConst.COLLISION_DEDUCT_BOSS
+									: GlobalConst.COLLISION_DEDUCT_NORMAL));
+			for (Bullet playerBullet : playerShotList) {
+				// 玩家子弹击中敌机
+				doCollisionCheck(playerBullet.getImage(), enemy.getImage(), playerBullet.getConfig(),
+						enemyConfig,
+						() -> {
+							// 敌机扣血
+							enemy.deductHealthPoint(playerBullet);
+							// 移除子弹
+							playerShotList.remove(playerBullet);
+						});
 			}
 		}
 	}

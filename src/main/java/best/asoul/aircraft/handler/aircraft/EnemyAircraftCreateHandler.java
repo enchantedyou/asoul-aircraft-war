@@ -56,6 +56,7 @@ public class EnemyAircraftCreateHandler extends AircraftCreateHandler {
 			log.warn("战机创建数量不合法：{}", count);
 		} else if (count == 0) {
 			while (!Thread.currentThread().isInterrupted()) {
+				AsoulUtil.enablePause();
 				doCreateAndMove(aircraft, aircraftConfig, true);
 			}
 		} else {
@@ -75,6 +76,7 @@ public class EnemyAircraftCreateHandler extends AircraftCreateHandler {
 	private void createWithFixedPosition(FlyingConfig aircraftConfig, int everyAircraftWidth, int offset,
 			int midAircraftStartIndex, Integer midCount) {
 		for (int i = 0; i < count; i++) {
+			AsoulUtil.enablePause();
 			final Aircraft c;
 			if (midAircraftStartIndex > -1 && i >= midAircraftStartIndex && i < midAircraftStartIndex + midCount) {
 				c = doCreateAndMove(midAircraft, aircraftConfig, (i != count - 1));

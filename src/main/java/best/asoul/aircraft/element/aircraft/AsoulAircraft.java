@@ -25,7 +25,7 @@ public class AsoulAircraft extends Aircraft {
 	@Override
 	public boolean bulletLevelUp() {
 		int level = bulletLevel.incrementAndGet();
-		bullet.switchLevel(level);
+		bullet.switchLevel(level, getAwakeLevel());
 		if (level >= GlobalConst.ENERGY_RESTORED_LEVEL) {
 			triggerEnergyRestored();
 			// 如果子弹升级后刚好到达暴走等级，说明是从未暴走状态切换为暴走状态，否则为延续暴走状态，不再重复增强子弹

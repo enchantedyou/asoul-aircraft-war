@@ -52,26 +52,26 @@ public class AircraftMouseListener implements MouseMotionListener, MouseListener
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
+		// 忽略
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-
+		// 忽略
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-
+		// 忽略
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-
+		// 忽略
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-
+		// 忽略
 	}
 }

@@ -29,6 +29,7 @@ public class BoostMoveTask implements Runnable {
 	public void run() {
 		final int moveInterval = new BoostConfig(0, 0).getMoveInterval();
 		while (!Thread.currentThread().isInterrupted()) {
+			AsoulUtil.enablePause();
 			for (DriftBoot boost : driftBootList) {
 				if (boost.isUsed()) {
 					driftBootList.remove(boost);

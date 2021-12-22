@@ -1,6 +1,10 @@
 package best.asoul.aircraft.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.concurrent.locks.LockSupport;
 
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.context.GameContext;
@@ -9,6 +13,7 @@ import best.asoul.aircraft.element.boost.*;
 import best.asoul.aircraft.entity.AircraftCamp;
 import best.asoul.aircraft.entity.Direction;
 import best.asoul.aircraft.exception.AsoulException;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,35 +36,16 @@ public class AsoulUtil {
 	 * @Date 2021/11/20-23:10
 	 */
 	public static <T> T clone(T obj, Class<T> clazz) {
-		ObjectOutputStream oos = null;
-		ObjectInputStream ois = null;
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			oos = new ObjectOutputStream(bos);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
 			oos.writeObject(obj);
-
 			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-			ois = new ObjectInputStream(bis);
-			return clazz.cast(ois.readObject());
+			try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+				return clazz.cast(ois.readObject());
+			}
 		} catch (Exception e) {
 			log.error("对象深拷贝失败", e);
 			throw new AsoulException(e);
-		} finally {
-			if (oos != null) {
-				try {
-					oos.close();
-				} catch (IOException e) {
-					// 忽略
-				}
-			}
-
-			if (ois != null) {
-				try {
-					ois.close();
-				} catch (IOException e) {
-					// 忽略
-				}
-			}
 		}
 	}
 
@@ -164,6 +150,17 @@ public class AsoulUtil {
 			}
 		} else {
 			return x1 > x2 ? Direction.RIGHT.degrees() : Direction.LEFT.degrees();
+		}
+	}
+
+	/**
+	 * @Description 允许当前线程受暂停控制
+	 * @Author Enchantedyou
+	 * @Date 2021/12/22-22:22
+	 */
+	public static void enablePause() {
+		if (AsoulThreadHelper.isGamePause()) {
+			LockSupport.park();
 		}
 	}
 }

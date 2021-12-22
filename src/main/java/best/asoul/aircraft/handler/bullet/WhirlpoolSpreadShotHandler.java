@@ -48,19 +48,9 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 			// 每一轮随机一个旋涡中心
 			int x = GlobalConst.RANDOM.nextInt(aircraft.getImage().getWidth()) + aircraft.getConfig().getX();
 			int y = GlobalConst.RANDOM.nextInt(aircraft.getImage().getHeight()) + aircraft.getConfig().getY();
-
-			for (double d = 0D; d < GlobalConst.DEGREES_OF_CIRCLE; d += degreesOffset) {
-				if (aircraft.isDead()) {
-					return;
-				}
-
-				final Bullet bullet = createBullet(aircraft);
-				bullet.getConfig().setDegrees(d);
-				bullet.moveTo(x, y);
-				if (!shotTogether) {
-					bullet.getConfig().setSpeed(speed);
-				}
-				toRecoverySpeedBulletList.add(bullet);
+			// 根据角度偏移量创建一个圆圈型子弹射击样式
+			if (shotCircleByOffset(aircraft, toRecoverySpeedBulletList, speed, x, y)) {
+				return;
 			}
 			if (turnCount != 0 && --c <= 0) {
 				break;
@@ -75,6 +65,25 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 			}
 		}
 		toRecoverySpeedBulletList.clear();
+	}
+
+	private boolean shotCircleByOffset(Aircraft aircraft, List<Bullet> toRecoverySpeedBulletList, double speed, int x,
+			int y) {
+		for (double d = 0D; d < GlobalConst.DEGREES_OF_CIRCLE; d += degreesOffset) {
+			AsoulUtil.enablePause();
+			if (aircraft.isDead()) {
+				return true;
+			}
+
+			final Bullet bullet = createBullet(aircraft);
+			bullet.getConfig().setDegrees(d);
+			bullet.moveTo(x, y);
+			if (!shotTogether) {
+				bullet.getConfig().setSpeed(speed);
+			}
+			toRecoverySpeedBulletList.add(bullet);
+		}
+		return false;
 	}
 
 	@Override

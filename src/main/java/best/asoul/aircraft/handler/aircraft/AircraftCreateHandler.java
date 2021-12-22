@@ -3,11 +3,12 @@ package best.asoul.aircraft.handler.aircraft;
 import java.util.List;
 
 import best.asoul.aircraft.element.base.Aircraft;
+import best.asoul.aircraft.entity.AircraftCamp;
 import best.asoul.aircraft.invoker.Invoker;
 import best.asoul.aircraft.thread.BulletCreateTask;
 import best.asoul.aircraft.thread.BulletMoveTask;
 import best.asoul.aircraft.thread.EnemyAircraftMoveTask;
-import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 
 /**
  * @Description 战机生成处理器
@@ -26,15 +27,6 @@ public abstract class AircraftCreateHandler {
 	protected Invoker beforeNextHandleInvoker;
 
 	/**
-	 * @Description 创建战机
-	 * @Author Enchantedyou
-	 * @Date 2021/11/22-21:43
-	 */
-	public void create() {
-		initAircraft(aircraft);
-	}
-
-	/**
 	 * @Description 下一个处理器处理前做些什么
 	 * @Author Enchantedyou
 	 * @Date 2021/11/22-22:27
@@ -43,6 +35,15 @@ public abstract class AircraftCreateHandler {
 		if (beforeNextHandleInvoker != null) {
 			beforeNextHandleInvoker.invoke();
 		}
+	}
+
+	/**
+	 * @Description 创建战机
+	 * @Author Enchantedyou
+	 * @Date 2021/11/22-21:43
+	 */
+	public void create() {
+		initAircraft(aircraft);
 	}
 
 	protected AircraftCreateHandler(int count, Aircraft aircraft, List<Aircraft> aircraftList) {
@@ -87,13 +88,16 @@ public abstract class AircraftCreateHandler {
 	 * @return best.asoul.aircraft.element.base.Aircraft
 	 */
 	protected final void initAircraft(Aircraft aircraft) {
+		if (aircraft.getCamp() != AircraftCamp.ASOUL) {
+			AsoulThreadHelper.readyAwait();
+		}
 		// 添加至战机列表
 		aircraftList.add(aircraft);
 		// 创建子弹的生成线程
-		AsoulThreadPoolHelper.submitGameTask(new BulletCreateTask(aircraft));
+		AsoulThreadHelper.submitTask(new BulletCreateTask(aircraft));
 		// 创建战机移动的线程
-		AsoulThreadPoolHelper.submitGameTask(new EnemyAircraftMoveTask(aircraft));
+		AsoulThreadHelper.submitTask(new EnemyAircraftMoveTask(aircraft));
 		// 创建子弹移动的线程
-		AsoulThreadPoolHelper.submitGameTask(new BulletMoveTask(aircraft));
+		AsoulThreadHelper.submitTask(new BulletMoveTask(aircraft));
 	}
 }

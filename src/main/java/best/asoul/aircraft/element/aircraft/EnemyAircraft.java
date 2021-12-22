@@ -17,7 +17,7 @@ import best.asoul.aircraft.util.SoundUtil;
  */
 public abstract class EnemyAircraft extends Aircraft {
 
-	public EnemyAircraft(String imageKey, Bullet bullet) {
+	protected EnemyAircraft(String imageKey, Bullet bullet) {
 		super(imageKey, bullet);
 		initBaseInfo(10000);
 	}

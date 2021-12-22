@@ -1,6 +1,7 @@
 package best.asoul.aircraft.thread;
 
 import best.asoul.aircraft.element.base.Aircraft;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,6 +22,7 @@ public class BulletCreateTask implements Runnable {
 	@Override
 	public void run() {
 		try {
+			AsoulThreadHelper.readyAwait();
 			aircraft.getShotChain().doChain();
 		} catch (Exception e) {
 			log.error("子弹创建失败", e);

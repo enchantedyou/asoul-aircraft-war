@@ -7,6 +7,7 @@ import best.asoul.aircraft.config.GlobalConfig;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.entity.AircraftCamp;
 import best.asoul.aircraft.entity.Direction;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import best.asoul.aircraft.util.AsoulUtil;
 
 /**
@@ -33,13 +34,14 @@ public class EnemyAircraftMoveTask implements Runnable {
 
 	@Override
 	public void run() {
-
+		AsoulThreadHelper.readyAwait();
 		// 战机移动
 		while (!Thread.currentThread().isInterrupted()) {
 			// 如果战机阵亡则结束当前战机的移动线程
 			if (aircraft.isDead()) {
 				break;
 			}
+			AsoulUtil.enablePause();
 
 			final FlyingConfig aircraftConfig = aircraft.getConfig();
 			final BufferedImage image = aircraft.getImage();

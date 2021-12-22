@@ -76,7 +76,7 @@ public abstract class Aircraft extends Flying implements Serializable {
 		// 子弹恢复为暴走前的等级
 		bulletRecover();
 		if (bulletLevel.get() == GlobalConst.ENERGY_RESTORED_LEVEL) {
-			bullet.switchLevel(bulletLevel.decrementAndGet());
+			bullet.switchLevel(bulletLevel.decrementAndGet(), awakeLevel.get());
 		}
 	}
 
@@ -100,8 +100,6 @@ public abstract class Aircraft extends Flying implements Serializable {
 		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() + 4);
 		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() + 120);
 		bulletConfig.increaseSpeed(-10D);
-		// 子弹攻击力恢复
-		// bullet.setAttack(bullet.getAttack() * 2);
 	}
 
 	/**
@@ -114,8 +112,6 @@ public abstract class Aircraft extends Flying implements Serializable {
 		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() - 4);
 		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() - 120);
 		bulletConfig.increaseSpeed(+10D);
-		// 子弹攻击力减半
-		// bullet.setAttack(bullet.getAttack() / 2);
 	}
 
 	/**
@@ -315,11 +311,7 @@ public abstract class Aircraft extends Flying implements Serializable {
 	 * @return boolean
 	 */
 	public boolean isDead() {
-		if (getConfig().getY() >= GlobalConfig.SCREEN_HEIGHT || this.healthPoint <= 0) {
-			// 2021年12月13日20:55:00 战机死了不再清除子弹
-			return true;
-		}
-		return false;
+		return getConfig().getY() >= GlobalConfig.SCREEN_HEIGHT || this.healthPoint <= 0;
 	}
 
 	/**

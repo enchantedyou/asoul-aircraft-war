@@ -82,7 +82,7 @@ public class GameContext {
 	 * @Date 2021/12/4-13:59
 	 * @param stageDefine
 	 */
-	public synchronized static void determineStageDefine(StageDefine stageDefine) {
+	public static synchronized void determineStageDefine(StageDefine stageDefine) {
 		GAME_SESSION.setStageDefine(stageDefine);
 	}
 

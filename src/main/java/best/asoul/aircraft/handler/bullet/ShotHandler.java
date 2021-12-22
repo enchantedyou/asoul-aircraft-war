@@ -22,7 +22,7 @@ public abstract class ShotHandler implements Serializable {
 	/** 下一个处理器调用前的处理 **/
 	protected Invoker beforeNextHandleInvoker;
 	/** 战机阵营限制 **/
-	protected List<AircraftCamp> campLimitList;
+	private List<AircraftCamp> campLimitList;
 	/** 总共发射多少轮 **/
 	protected int turnCount;
 	/** 每一轮间隔多久 **/

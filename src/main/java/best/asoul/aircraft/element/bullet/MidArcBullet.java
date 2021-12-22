@@ -17,7 +17,7 @@ public class MidArcBullet extends Bullet {
 	}
 
 	@Override
-	public void switchLevel(int level) {
+	public void switchLevel(int bulletLevel, int awakeLevel) {
 		throw new UnsupportedOperationException();
 	}
 }

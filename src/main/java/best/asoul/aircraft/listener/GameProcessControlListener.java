@@ -10,7 +10,7 @@ import best.asoul.aircraft.context.GameContext;
 import best.asoul.aircraft.entity.GameSession;
 import best.asoul.aircraft.entity.GameStatus;
 import best.asoul.aircraft.factory.JFrameFactory;
-import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import best.asoul.aircraft.util.SoundUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,14 +56,14 @@ public class GameProcessControlListener implements KeyListener {
 		else if (gameStatus == GameStatus.RUNNING) {
 			// 特效状态保存
 			GameContext.getPlayerAircraft().saveHoldBoost();
-			AsoulThreadPoolHelper.gamePauseOrResume();
+			AsoulThreadHelper.gamePauseOrResume();
 			GameContext.switchGameStatus(GameStatus.PAUSE);
 		}
 		// 游戏恢复
 		else if (gameStatus == GameStatus.PAUSE) {
 			// 特效状态恢复
 			GameContext.getPlayerAircraft().recoveryHoldBoost();
-			AsoulThreadPoolHelper.gamePauseOrResume();
+			AsoulThreadHelper.gamePauseOrResume();
 			GameContext.switchGameStatus(GameStatus.RUNNING);
 		}
 	}

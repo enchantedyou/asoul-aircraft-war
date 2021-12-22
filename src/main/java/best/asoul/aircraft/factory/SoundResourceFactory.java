@@ -59,7 +59,7 @@ public class SoundResourceFactory {
 		final String soundKey = file.getName().split("\\.")[0];
 		log.info("加载音效资源：{}", soundKey);
 		try {
-			AUDIO_MAP.put(soundKey, file.toURL());
+			AUDIO_MAP.put(soundKey, file.toURI().toURL());
 		} catch (IOException e) {
 			log.error("音效资源加载失败：{}", soundKey);
 		}

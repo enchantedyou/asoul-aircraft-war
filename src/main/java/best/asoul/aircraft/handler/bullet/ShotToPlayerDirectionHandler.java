@@ -54,6 +54,7 @@ public class ShotToPlayerDirectionHandler extends ShotHandler {
 			return;
 		}
 		for (int i = 0; i < bulletCount; i++) {
+			AsoulUtil.enablePause();
 			if (aircraft.isDead()) {
 				return;
 			}

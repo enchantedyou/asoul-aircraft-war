@@ -26,9 +26,9 @@ public class GlobalConst {
 	/** 飞机碰撞伤害计算间隔 **/
 	public static final long AIRCRAFT_COLLISION_INTERVAL = 1000L;
 	/** 玩家飞机碰撞到普通飞机时扣除血量百分比 **/
-	public static final int COLLISION_DEDUCT_NORMAL = 10;
+	public static final int COLLISION_DEDUCT_NORMAL = 20;
 	/** 玩家飞机碰撞到boss时扣除血量百分比 **/
-	public static final int COLLISION_DEDUCT_BOSS = 30;
+	public static final int COLLISION_DEDUCT_BOSS = 40;
 	/** 背景音乐循环次数 **/
 	public static final int BGM_LOOP_COUNT = 999;
 	/** 最大音量 **/
@@ -48,7 +48,7 @@ public class GlobalConst {
 	/** 并排子弹间距 **/
 	public static final int BULLET_DISTANCE = 10;
 	/** 敌机阵亡后出现增益效果的概率 **/
-	public static final int BOOST_CREATE_PROBABILITY = 45;
+	public static final int BOOST_CREATE_PROBABILITY = 80;
 	/** 鼠标距离战机距离的上限，超过该距离则不随着鼠标移动，防止作弊 **/
 	public static final int MOUSE_AIRCRAFT_DISTANCE_LIMIT = 800;
 	/** 每个象限的最大角度 **/

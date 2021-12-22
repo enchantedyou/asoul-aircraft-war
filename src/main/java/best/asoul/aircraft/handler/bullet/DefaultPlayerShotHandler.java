@@ -24,6 +24,7 @@ public class DefaultPlayerShotHandler extends ShotHandler {
 	@Override
 	public void shot(Aircraft aircraft) {
 		while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
+			AsoulUtil.enablePause();
 			final FlyingConfig bulletConfig = aircraft.getBullet().getConfig();
 			final int bulletWidth = bulletConfig.getWidth();
 			final int bulletHeight = bulletConfig.getHeight();
