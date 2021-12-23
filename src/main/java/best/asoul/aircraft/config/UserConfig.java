@@ -15,25 +15,37 @@ public class UserConfig {
 
 	private static final AtomicReference<UserConfig> INSTANCE = new AtomicReference<>();
 
-	private UserConfig(){
+	private UserConfig() {
 	}
 
 	/**
-	 * @Description	获取用户配置实例
+	 * @Description 获取用户配置实例
 	 * @Author Enchantedyou
 	 * @Date 2021/12/23-14:36
 	 * @return best.asoul.aircraft.config.UserConfig
 	 */
-	public static UserConfig getInstance(){
-		if(null == INSTANCE.get()){
-			synchronized (UserConfig.class){
-				if(null == INSTANCE.get()){
-					//加载配置文件
+	public static UserConfig getInstance() {
+		if (null == INSTANCE.get()) {
+			synchronized (UserConfig.class) {
+				if (null == INSTANCE.get()) {
+					// 加载配置文件
 					final Properties properties = ResourceLoader.loadUserConfig();
 					UserConfig userConfig = new UserConfig();
-					userConfig.setFrameRate((Integer) properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "frameRate"));
-					userConfig.setBgmVolume((Integer) properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "bgmVolume"));
-					userConfig.setEffectVolume((Integer) properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "effectVolume"));
+					// 读取配置
+					final Object frameRate = properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "frameRate");
+					final Object bgmVolume = properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "bgmVolume");
+					final Object effectVolume = properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "effectVolume");
+
+					// 赋值
+					if (frameRate != null) {
+						userConfig.setFrameRate(Integer.parseInt(String.valueOf(frameRate)));
+					}
+					if (bgmVolume != null) {
+						userConfig.setBgmVolume(Integer.parseInt(String.valueOf(bgmVolume)));
+					}
+					if (effectVolume != null) {
+						userConfig.setEffectVolume(Integer.parseInt(String.valueOf(effectVolume)));
+					}
 					INSTANCE.getAndSet(userConfig);
 				}
 			}
@@ -60,22 +72,22 @@ public class UserConfig {
 		return effectVolume;
 	}
 
-	public void setFrameRate(int frameRate) {
-		if(frameRate > GlobalConst.MAX_FRAME_RATE || frameRate < GlobalConst.MIN_FRAME_RATE){
+	public void setFrameRate(Integer frameRate) {
+		if (null == frameRate || frameRate > GlobalConst.MAX_FRAME_RATE || frameRate < GlobalConst.MIN_FRAME_RATE) {
 			return;
 		}
 		this.frameRate = frameRate;
 	}
 
-	public void setBgmVolume(int bgmVolume) {
-		if(bgmVolume > GlobalConst.MAX_VOLUME || bgmVolume < 0){
+	public void setBgmVolume(Integer bgmVolume) {
+		if (null == bgmVolume || bgmVolume > GlobalConst.MAX_VOLUME || bgmVolume < 0) {
 			return;
 		}
 		this.bgmVolume = bgmVolume;
 	}
 
-	public void setEffectVolume(int effectVolume) {
-		if(bgmVolume > GlobalConst.MAX_VOLUME || bgmVolume < 0){
+	public void setEffectVolume(Integer effectVolume) {
+		if (null == effectVolume || effectVolume > GlobalConst.MAX_VOLUME || effectVolume < 0) {
 			return;
 		}
 		this.effectVolume = effectVolume;

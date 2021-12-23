@@ -1,9 +1,6 @@
 package best.asoul.aircraft.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.concurrent.locks.LockSupport;
 
 import best.asoul.aircraft.constant.GlobalConst;
@@ -44,8 +41,27 @@ public class AsoulUtil {
 				return clazz.cast(ois.readObject());
 			}
 		} catch (Exception e) {
-			log.error("对象深拷贝失败", e);
-			throw new AsoulException(e);
+			throw new AsoulException("对象深拷贝失败", e);
+		}
+	}
+
+	/**
+	 * @Description 获取流的字节数组
+	 * @Author Enchantedyou
+	 * @Date 2021/12/23-23:32
+	 * @param inputStream
+	 * @return java.io.InputStream
+	 */
+	public static byte[] getStreamByteArray(InputStream inputStream) {
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = inputStream.read(buffer)) > -1) {
+				bos.write(buffer, 0, len);
+			}
+			return bos.toByteArray();
+		} catch (Exception e) {
+			throw new AsoulException("获取流的字节数组失败", e);
 		}
 	}
 

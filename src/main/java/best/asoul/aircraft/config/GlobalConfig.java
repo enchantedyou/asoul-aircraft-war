@@ -36,15 +36,15 @@ public class GlobalConfig {
 	/** 加密文件分割结束标志 **/
 	public static final String SECRET_END_TOKEN = "AS_END";
 	/** 加密资源拆分正则表达式 **/
-	public static final Pattern SECRET_RESOURCE_SPLIT_PATTERN =
-			Pattern.compile(SECRET_START_TOKEN + "(.*?)" + SECRET_END_TOKEN);
+	public static final Pattern SECRET_RESOURCE_SPLIT_PATTERN = Pattern
+			.compile(SECRET_START_TOKEN + "(.*?)" + SECRET_END_TOKEN);
 	/** 加密文件后缀 **/
-	public static final String SECRET_FILE_SUFFIX = "as";
+	public static final String SECRET_FILE_SUFFIX = "asoul";
 	/** 加密秘钥 **/
-	public static final String SECRET_KEY = "";
+	public static final String SECRET_KEY = "Hello!WeAreAsoul";
 
 	/** 用户配置文件名称 **/
 	public static final String USER_CONFIG_FILE_NAME = "asoul.properties";
 	/** 用户配置属性前缀 **/
-	public static final String USER_CONFIG_PROP_PREFIX = "asoul.user.config";
+	public static final String USER_CONFIG_PROP_PREFIX = "asoul.user.config.";
 }

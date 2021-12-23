@@ -14,10 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 public class AsoulLauncher {
 
 	public static void main(String[] args) {
-		// 加载资源
-		loadResource();
-		// 启动主界面
-		JFrameFactory.createMenuJFrame(SoundUtil::loopMenuBgm);
+		try {
+			// 加载资源
+			loadResource();
+			// 启动主界面
+			JFrameFactory.createMenuJFrame(SoundUtil::loopMenuBgm);
+		} catch (Exception e) {
+			log.error("游戏启动失败", e);
+		}
 	}
 
 	/**

@@ -73,18 +73,18 @@ public class ResourceLoader {
 	}
 
 	/**
-	 * @Description	加载用户配置
+	 * @Description 加载用户配置
 	 * @Author Enchantedyou
 	 * @Date 2021/12/23-14:25
 	 * @return java.util.Properties
 	 */
-	public static Properties loadUserConfig(){
-		final String userConfigPath = getRootPath("/config") + File.separator + GlobalConfig.USER_CONFIG_FILE_NAME;
-		try(final InputStream inputStream = Files.newInputStream(Paths.get(userConfigPath))){
+	public static Properties loadUserConfig() {
+		final String userConfigPath = getRootPath("/config/" + GlobalConfig.USER_CONFIG_FILE_NAME);
+		try (final InputStream inputStream = Files.newInputStream(Paths.get(userConfigPath.substring(1)))) {
 			Properties properties = new Properties();
 			properties.load(inputStream);
 			return properties;
-		}catch (Exception e){
+		} catch (Exception e) {
 			throw new AsoulException("用户配置加载失败", e);
 		}
 	}

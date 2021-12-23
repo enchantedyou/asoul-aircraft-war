@@ -1,5 +1,6 @@
 package best.asoul.aircraft.factory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
@@ -13,6 +14,7 @@ import best.asoul.aircraft.config.UserConfig;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.exception.AsoulException;
 import best.asoul.aircraft.handler.resource.ResourceDecoder;
+import best.asoul.aircraft.util.AsoulUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,7 +29,7 @@ public class SoundResourceFactory {
 	}
 
 	/** 音效资源 **/
-	private static final Map<String, InputStream> AUDIO_MAP = new ConcurrentHashMap<>();
+	private static final Map<String, byte[]> AUDIO_MAP = new ConcurrentHashMap<>();
 
 	/**
 	 * @Description 获取音效资源文件
@@ -39,12 +41,13 @@ public class SoundResourceFactory {
 	public static Clip getAudioClip(String soundKey) {
 		try {
 			Clip audioClip = AudioSystem.getClip();
-			audioClip.open(AudioSystem.getAudioInputStream(AUDIO_MAP.get(soundKey)));
+			final InputStream inputStream = new ByteArrayInputStream(AUDIO_MAP.get(soundKey));
+			audioClip.open(AudioSystem.getAudioInputStream(inputStream));
 			// 音量控制
 			controlVolume(soundKey, audioClip);
 			return audioClip;
 		} catch (Exception e) {
-			throw new AsoulException("音效资源加载失败：", e);
+			throw new AsoulException("音效资源加载失败：" + soundKey, e);
 		}
 	}
 
@@ -58,7 +61,7 @@ public class SoundResourceFactory {
 		ResourceDecoder.decode(file, (fileName, inputStream) -> {
 			final String soundKey = fileName.split("\\.")[0];
 			log.info("加载音效资源：{}", soundKey);
-			AUDIO_MAP.put(soundKey, inputStream);
+			AUDIO_MAP.put(soundKey, AsoulUtil.getStreamByteArray(inputStream));
 		});
 	}
 

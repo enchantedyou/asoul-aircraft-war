@@ -71,7 +71,7 @@ public class AnimationResourceFactory {
 				}
 				ANIMATION_MAP.put(animationKey, imageList);
 			} catch (Exception e) {
-				log.error("动画资源加载失败：", e);
+				log.error("动画资源加载失败：" + animationKey, e);
 			}
 		});
 	}

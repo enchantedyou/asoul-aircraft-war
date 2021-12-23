@@ -64,6 +64,7 @@
                         <exclude>/**/*.jpg</exclude>
                         <exclude>/**/*.wav</exclude>
                         <exclude>/**/*.xml</exclude>
+                        <exclude>/**/*.asoul</exclude>
                         <exclude>META-INF/**</exclude>
                     </excludes>
                 </configuration>
