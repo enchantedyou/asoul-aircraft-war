@@ -1,5 +1,11 @@
 package best.asoul.aircraft.config;
 
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
+
+import best.asoul.aircraft.constant.GlobalConst;
+import best.asoul.aircraft.factory.ResourceLoader;
+
 /**
  * @Description 用户配置
  * @Author Enchantedyou
@@ -7,13 +13,80 @@ package best.asoul.aircraft.config;
  */
 public class UserConfig {
 
-	private UserConfig() {
+	private static final AtomicReference<UserConfig> INSTANCE = new AtomicReference<>();
+
+	private UserConfig(){
+	}
+
+	/**
+	 * @Description	获取用户配置实例
+	 * @Author Enchantedyou
+	 * @Date 2021/12/23-14:36
+	 * @return best.asoul.aircraft.config.UserConfig
+	 */
+	public static UserConfig getInstance(){
+		if(null == INSTANCE.get()){
+			synchronized (UserConfig.class){
+				if(null == INSTANCE.get()){
+					//加载配置文件
+					final Properties properties = ResourceLoader.loadUserConfig();
+					UserConfig userConfig = new UserConfig();
+					userConfig.setFrameRate((Integer) properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "frameRate"));
+					userConfig.setBgmVolume((Integer) properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "bgmVolume"));
+					userConfig.setEffectVolume((Integer) properties.get(GlobalConfig.USER_CONFIG_PROP_PREFIX + "effectVolume"));
+					INSTANCE.getAndSet(userConfig);
+				}
+			}
+		}
+		return INSTANCE.get();
 	}
 
 	/** 帧率 **/
-	public static final int FRAME_RATE = 90;
+	private int frameRate = 90;
 	/** 背景音乐音量 **/
-	public static final int BGM_VOLUME = 55;
+	private int bgmVolume = 75;
 	/** 音效音量 **/
-	public static final int EFFECT_VOLUME = 55;
+	private int effectVolume = 75;
+
+	public int getFrameRate() {
+		return frameRate;
+	}
+
+	public int getBgmVolume() {
+		return bgmVolume;
+	}
+
+	public int getEffectVolume() {
+		return effectVolume;
+	}
+
+	public void setFrameRate(int frameRate) {
+		if(frameRate > GlobalConst.MAX_FRAME_RATE || frameRate < GlobalConst.MIN_FRAME_RATE){
+			return;
+		}
+		this.frameRate = frameRate;
+	}
+
+	public void setBgmVolume(int bgmVolume) {
+		if(bgmVolume > GlobalConst.MAX_VOLUME || bgmVolume < 0){
+			return;
+		}
+		this.bgmVolume = bgmVolume;
+	}
+
+	public void setEffectVolume(int effectVolume) {
+		if(bgmVolume > GlobalConst.MAX_VOLUME || bgmVolume < 0){
+			return;
+		}
+		this.effectVolume = effectVolume;
+	}
+
+	@Override
+	public String toString() {
+		return "UserConfig{" +
+				"frameRate=" + frameRate +
+				", bgmVolume=" + bgmVolume +
+				", effectVolume=" + effectVolume +
+				'}';
+	}
 }

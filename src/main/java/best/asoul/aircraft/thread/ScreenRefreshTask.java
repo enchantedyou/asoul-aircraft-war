@@ -37,7 +37,7 @@ public class ScreenRefreshTask implements Runnable {
 		final ThreadPoolExecutor threadPool = AsoulThreadHelper.getThreadPool();
 
 		// 计算停顿间隔
-		final long interval = calcInterval(UserConfig.FRAME_RATE);
+		final long interval = calcInterval(UserConfig.getInstance().getFrameRate());
 		while (!Thread.currentThread().isInterrupted()) {
 			AsoulUtil.enablePause();
 			jPanel.repaint();

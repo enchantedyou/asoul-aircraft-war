@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
+import best.asoul.aircraft.handler.resource.ResourceDecoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,12 +47,14 @@ public class ImageResourceFactory {
 	 * @param file
 	 */
 	protected static void fillImageResource(File file) {
-		final String imageKey = file.getName().split("\\.")[0];
-		log.info("加载图片资源：{}", imageKey);
-		try {
-			IMAGE_MAP.put(imageKey, ImageIO.read(file));
-		} catch (IOException e) {
-			log.error("图片资源加载失败", e);
-		}
+		ResourceDecoder.decode(file, (fileName, inputStream) -> {
+			final String imageKey = fileName.split("\\.")[0];
+			log.info("加载图片资源：{}", imageKey);
+			try {
+				IMAGE_MAP.put(imageKey, ImageIO.read(inputStream));
+			} catch (IOException e) {
+				log.error("图片资源加载失败", e);
+			}
+		});
 	}
 }

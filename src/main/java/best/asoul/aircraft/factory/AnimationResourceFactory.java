@@ -13,6 +13,7 @@ import best.asoul.aircraft.element.base.Flying;
 import best.asoul.aircraft.entity.AnimationEffectPlayer;
 import best.asoul.aircraft.entity.AnimationType;
 import best.asoul.aircraft.exception.AsoulException;
+import best.asoul.aircraft.handler.resource.ResourceDecoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -55,21 +56,23 @@ public class AnimationResourceFactory {
 	 * @param file
 	 */
 	protected static void fillAnimationResource(File file) {
-		final String animationKey = file.getName().split("\\.")[0];
-		log.info("加载动画资源：{}", animationKey);
-		try {
-			final BufferedImage image = ImageIO.read(file);
-			final AnimationType effectType = AnimationType.valueOf(animationKey.toUpperCase());
-			List<BufferedImage> imageList = new CopyOnWriteArrayList<>();
+		ResourceDecoder.decode(file, (fileName, inputStream) -> {
+			final String animationKey = fileName.split("\\.")[0];
+			log.info("加载动画资源：{}", animationKey);
+			try {
+				final BufferedImage image = ImageIO.read(inputStream);
+				final AnimationType effectType = AnimationType.valueOf(animationKey.toUpperCase());
+				List<BufferedImage> imageList = new CopyOnWriteArrayList<>();
 
-			for (int i = 0; i < effectType.getFrameCount(); i++) {
-				final BufferedImage subImage = image.getSubimage(effectType.getWidth() * i, effectType.getCutY(),
-						effectType.getWidth(), effectType.getHeight());
-				imageList.add(subImage);
+				for (int i = 0; i < effectType.getFrameCount(); i++) {
+					final BufferedImage subImage = image.getSubimage(effectType.getWidth() * i, effectType.getCutY(),
+							effectType.getWidth(), effectType.getHeight());
+					imageList.add(subImage);
+				}
+				ANIMATION_MAP.put(animationKey, imageList);
+			} catch (Exception e) {
+				log.error("动画资源加载失败：", e);
 			}
-			ANIMATION_MAP.put(animationKey, imageList);
-		} catch (Exception e) {
-			log.error("动画资源加载失败：", e);
-		}
+		});
 	}
 }

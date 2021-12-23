@@ -17,8 +17,6 @@ public class GlobalConst {
 	public static final int EXIT_SUCCESS_CODE = 0;
 	/** 随机数种子对象 **/
 	public static final Random RANDOM = new SecureRandom();
-	/** 默认帧率 **/
-	public static final int DEFAULT_FRAME_RATE = 60;
 	/** 最大帧率 **/
 	public static final int MAX_FRAME_RATE = 100;
 	/** 最小帧率 **/
