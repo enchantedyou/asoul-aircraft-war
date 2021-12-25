@@ -32,25 +32,47 @@
 ## A-SOUL
 
 A-SOUL_Official
+
 直播间：https://live.bilibili.com/22632157/
+
 官方主页：https://space.bilibili.com/703007996/
 
+
+
 向晚大魔王
+
 直播间：https://live.bilibili.com/22625025/
+
 个人主页：https://space.bilibili.com/672346917/
 
+
+
 贝拉kira
+
 直播间：https://live.bilibili.com/22632424/
+
 个人主页：https://space.bilibili.com/672353429/
 
+
+
 珈乐Carol
+
 直播间：https://live.bilibili.com/22634198/
+
 个人主页：https://space.bilibili.com/351609538/
 
+
+
 嘉然今天吃什么
+
 直播间：https://live.bilibili.com/22637261/
+
 个人主页：https://space.bilibili.com/672328094/
 
+
+
 乃琳Queen
+
 直播间：https://live.bilibili.com/22625027/
+
 个人主页：https://space.bilibili.com/672342685/
