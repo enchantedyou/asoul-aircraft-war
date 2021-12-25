@@ -7,7 +7,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.config.GlobalConfig;
 import best.asoul.aircraft.constant.GlobalConst;
+import best.asoul.aircraft.element.aircraft.EnemyAircraft;
 import best.asoul.aircraft.element.base.Aircraft;
+import best.asoul.aircraft.entity.AircraftCamp;
+import best.asoul.aircraft.entity.BossType;
+import best.asoul.aircraft.exception.AsoulException;
 import best.asoul.aircraft.util.AsoulUtil;
 import best.asoul.aircraft.util.SoundUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,37 +24,44 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnemyAircraftCreateHandler extends AircraftCreateHandler {
 
+	/** 要创建的敌机 **/
+	private EnemyAircraft enemyAircraft;
 	/** 中间的飞机 **/
-	private Aircraft midAircraft;
-	/** 是否为boss **/
-	private boolean boss;
+	private EnemyAircraft midAircraft;
 	private static Map<Integer, Integer> midCountMap = new ConcurrentHashMap<>();
 	/** 插入中间不同飞机最小支持的count **/
 	private static final int MIN_SUPPORT_MID_COUNT = 3;
 	/** 插入中间不同飞机最大支持的count **/
 	private static final int MAX_SUPPORT_MID_COUNT = 9;
 
-	public EnemyAircraftCreateHandler(boolean boss, int count, Aircraft aircraft, Aircraft midAircraft,
+	public EnemyAircraftCreateHandler(int count, EnemyAircraft aircraft, EnemyAircraft midAircraft,
 			List<Aircraft> aircraftList) {
 		super(count, aircraft, aircraftList);
+		enemyAircraft = aircraft;
 		this.midAircraft = midAircraft;
-		this.boss = boss;
 		initMidCountMap();
 	}
 
-	public EnemyAircraftCreateHandler(boolean boss, int count, Aircraft aircraft, List<Aircraft> aircraftList) {
-		this(boss, count, aircraft, null, aircraftList);
+	public EnemyAircraftCreateHandler(int count, EnemyAircraft aircraft, List<Aircraft> aircraftList) {
+		this(count, aircraft, null, aircraftList);
 	}
 
 	@Override
-	public void create() {
+	public Aircraft create() {
 		// boss出现前播放告警音效并卖几秒钟关子
-		if (boss) {
+		if (enemyAircraft.getCamp() == AircraftCamp.BOSS) {
 			AsoulUtil.pause(1500L);
 			SoundUtil.stopBgm();
 			SoundUtil.playBossWarning();
 			AsoulUtil.pause(2500L);
-			SoundUtil.loopFinalBossBgm();
+
+			if (enemyAircraft.getBossType() == BossType.HALFWAY) {
+				SoundUtil.loopHalfwayBossBgm();
+			} else if (enemyAircraft.getBossType() == BossType.FINAL) {
+				SoundUtil.loopFinalBossBgm();
+			} else {
+				throw new AsoulException("未指定boss类型");
+			}
 		}
 
 		final FlyingConfig aircraftConfig = aircraft.getConfig();
@@ -58,6 +69,7 @@ public class EnemyAircraftCreateHandler extends AircraftCreateHandler {
 			log.warn("战机创建数量不合法：{}", count);
 		} else if (count == 0) {
 			while (!Thread.currentThread().isInterrupted()) {
+				AsoulUtil.enablePause();
 				doCreateAndMove(aircraft, aircraftConfig, true);
 			}
 		} else {
@@ -72,11 +84,13 @@ public class EnemyAircraftCreateHandler extends AircraftCreateHandler {
 			// 以修正后的位置创建
 			createWithFixedPosition(aircraftConfig, everyAircraftWidth, offset, midAircraftStartIndex, midCount);
 		}
+		return enemyAircraft;
 	}
 
 	private void createWithFixedPosition(FlyingConfig aircraftConfig, int everyAircraftWidth, int offset,
 			int midAircraftStartIndex, Integer midCount) {
 		for (int i = 0; i < count; i++) {
+			AsoulUtil.enablePause();
 			final Aircraft c;
 			if (midAircraftStartIndex > -1 && i >= midAircraftStartIndex && i < midAircraftStartIndex + midCount) {
 				c = doCreateAndMove(midAircraft, aircraftConfig, (i != count - 1));

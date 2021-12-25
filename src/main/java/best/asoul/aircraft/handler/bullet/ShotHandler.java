@@ -2,6 +2,7 @@ package best.asoul.aircraft.handler.bullet;
 
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.List;
 
 import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.element.base.Aircraft;
@@ -19,16 +20,16 @@ import best.asoul.aircraft.util.AsoulUtil;
 public abstract class ShotHandler implements Serializable {
 
 	/** 下一个处理器调用前的处理 **/
-	protected transient Invoker beforeNextHandleInvoker;
+	protected Invoker beforeNextHandleInvoker;
 	/** 战机阵营限制 **/
-	protected AircraftCamp campLimit;
+	private List<AircraftCamp> campLimitList;
 	/** 总共发射多少轮 **/
 	protected int turnCount;
 	/** 每一轮间隔多久 **/
 	protected long turnInterval;
 
-	protected ShotHandler(AircraftCamp campLimit, int turnCount, long turnInterval) {
-		this.campLimit = campLimit;
+	protected ShotHandler(List<AircraftCamp> campLimitList, int turnCount, long turnInterval) {
+		this.campLimitList = campLimitList;
 		this.turnCount = turnCount;
 		this.turnInterval = turnInterval;
 	}
@@ -47,22 +48,26 @@ public abstract class ShotHandler implements Serializable {
 	 * @return best.asoul.aircraft.element.base.Bullet
 	 */
 	protected Bullet createBullet(Aircraft aircraft) {
-		if (!aircraft.getCamp().equals(campLimit)) {
+		if (!campLimitList.contains(aircraft.getCamp())) {
 			throw new AsoulException("战机所属阵营无效");
 		}
 
 		final FlyingConfig aircraftConfig = aircraft.getConfig();
+		final BufferedImage aircraftImage = aircraft.getImage();
 		// 复制当前战机的子弹属性
 		final Bullet bullet = AsoulUtil.clone(aircraft.getBullet(), Bullet.class);
 		final BufferedImage bulletImage = bullet.getImage();
 
-		int x = aircraftConfig.getX() + (aircraft.getImage().getWidth() - bulletImage.getWidth()) / 2;
+		int x = aircraftConfig.getX() + (aircraftImage.getWidth() - bulletImage.getWidth()) / 2;
 		int y = 0;
-		// 指定当前子弹的位置
+		// 指定子弹的初始位置
 		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
-			y = aircraftConfig.getY() - bulletImage.getHeight() + 120;
-		} else {
-			y = aircraftConfig.getY() + bulletImage.getHeight() + 20;
+			y = aircraftConfig.getY() - bulletImage.getHeight() + 80;
+		} else if (aircraft.getCamp() == AircraftCamp.ENEMY) {
+			y = aircraftConfig.getY() + aircraftImage.getHeight() + 10;
+		} else if (aircraft.getCamp() == AircraftCamp.BOSS) {
+			y = aircraftConfig.getY() + aircraftImage.getHeight() - 80;
+			x += 30;
 		}
 		bullet.moveTo(x, y);
 
@@ -89,10 +94,9 @@ public abstract class ShotHandler implements Serializable {
 	 * @Date 2021/12/6-21:12
 	 */
 	public void beforeNextHandle() {
+		AsoulUtil.pause(1200L);
 		if (beforeNextHandleInvoker != null) {
 			beforeNextHandleInvoker.invoke();
-		} else {
-			AsoulUtil.pause(1200L);
 		}
 	}
 
@@ -100,7 +104,8 @@ public abstract class ShotHandler implements Serializable {
 		return beforeNextHandleInvoker;
 	}
 
-	public void setBeforeNextHandleInvoker(Invoker beforeNextHandleInvoker) {
+	public ShotHandler setBeforeNextHandleInvoker(Invoker beforeNextHandleInvoker) {
 		this.beforeNextHandleInvoker = beforeNextHandleInvoker;
+		return this;
 	}
 }

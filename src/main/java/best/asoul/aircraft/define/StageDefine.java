@@ -11,7 +11,7 @@ import best.asoul.aircraft.entity.AnimationEffectPlayer;
 import best.asoul.aircraft.handler.aircraft.DefaultAircraftCreateHandler;
 import best.asoul.aircraft.thread.AircraftCreateTask;
 import best.asoul.aircraft.thread.BoostMoveTask;
-import best.asoul.aircraft.thread.base.AsoulThreadPoolHelper;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 
 /**
  * @Description 关卡定义
@@ -61,9 +61,9 @@ public abstract class StageDefine {
 		// 获取生成敌机的处理器
 		enemyCreateHandler();
 		// 提交敌机生成的线程
-		AsoulThreadPoolHelper.submitGameTask(new AircraftCreateTask(enemyCreateChain));
+		AsoulThreadHelper.submitTask(new AircraftCreateTask(enemyCreateChain));
 		// 提交增益效果移动的线程
-		AsoulThreadPoolHelper.submitGameTask(new BoostMoveTask(driftBootList));
+		AsoulThreadHelper.submitTask(new BoostMoveTask(driftBootList));
 	}
 
 	/**
@@ -96,7 +96,7 @@ public abstract class StageDefine {
 		if (player2 != null) {
 			playerCreateChain.append(new DefaultAircraftCreateHandler(player2, playerList));
 		}
-		AsoulThreadPoolHelper.submitNoPauseTask(new AircraftCreateTask(playerCreateChain));
+		AsoulThreadHelper.submitTask(new AircraftCreateTask(playerCreateChain));
 	}
 
 	/**

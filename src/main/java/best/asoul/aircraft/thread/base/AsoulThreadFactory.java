@@ -30,7 +30,7 @@ public class AsoulThreadFactory implements ThreadFactory {
 		thread.setName(prefix + threadNo.getAndIncrement());
 		// 加入到线程列表，用于暂停和恢复线程池中的线程。入侵并操作线程池中的线程是下下策，但是在该场景中暂未找到更合适的暂停实现方式
 		if (appendTaskList) {
-			AsoulThreadPoolHelper.TASK_LIST.add(thread);
+			AsoulThreadHelper.TASK_LIST.add(thread);
 		}
 		log.debug("线程池创建线程：{}", thread.getName());
 		return thread;

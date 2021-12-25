@@ -1,15 +1,13 @@
 package best.asoul.aircraft.handler.bullet;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 import best.asoul.aircraft.config.FlyingConfig;
-import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.context.GameContext;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.element.base.Bullet;
 import best.asoul.aircraft.entity.AircraftCamp;
-import best.asoul.aircraft.entity.Direction;
-import best.asoul.aircraft.entity.Quadrant;
 import best.asoul.aircraft.util.AsoulUtil;
 
 /**
@@ -28,7 +26,7 @@ public class ShotToPlayerDirectionHandler extends ShotHandler {
 
 	public ShotToPlayerDirectionHandler(int bulletCount, long shotInterval, int bulletSpeed, int turnCount,
 			long turnInterval) {
-		super(AircraftCamp.ENEMY, turnCount, turnInterval);
+		super(Arrays.asList(AircraftCamp.ENEMY, AircraftCamp.BOSS), turnCount, turnInterval);
 		this.bulletCount = bulletCount;
 		this.shotInterval = shotInterval;
 		this.bulletSpeed = bulletSpeed;
@@ -44,7 +42,7 @@ public class ShotToPlayerDirectionHandler extends ShotHandler {
 		while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
 			shotATurn(aircraft);
 
-			if (c != 0 && c-- <= 0) {
+			if (turnCount != 0 && --c <= 0) {
 				break;
 			}
 			AsoulUtil.pause(turnInterval);
@@ -56,6 +54,11 @@ public class ShotToPlayerDirectionHandler extends ShotHandler {
 			return;
 		}
 		for (int i = 0; i < bulletCount; i++) {
+			AsoulUtil.enablePause();
+			if (aircraft.isDead()) {
+				return;
+			}
+
 			final FlyingConfig bulletConfig = aircraft.getBullet().getConfig();
 			final Bullet bullet = createBullet(aircraft);
 			final BufferedImage bulletImage = bullet.getImage();
@@ -83,22 +86,7 @@ public class ShotToPlayerDirectionHandler extends ShotHandler {
 		// 计算子弹的中心点
 		int bMidX = bullet.getConfig().getX() + bulletImage.getWidth() / 2;
 		int bMidY = bullet.getConfig().getY() + bulletImage.getHeight() / 2;
-		// 计算两点之间的斜边距离、横向距离、纵向距离
-		double hypotenuseDistance = AsoulUtil.calcDistanceBetweenPoints(pMidX, pMidY, bMidX, bMidY);
-		double horizontalDistance = AsoulUtil.calcDistanceBetweenPoints(pMidX, 0, bMidX, 0);
-		// 计算角度
-		double degrees = Math.toDegrees(Math.asin(horizontalDistance / hypotenuseDistance));
-		// 判定运动方向
-		if (pMidX > bMidX) {
-			// 第四象限（右下）
-			bullet.getConfig().setDegrees(AsoulUtil.getActualDegrees(degrees, Quadrant.FOUR));
-		} else if (pMidX < bMidX) {
-			degrees = GlobalConst.MAX_QUADRANT_DEGREES - degrees;
-			// 第四象限（左下）
-			bullet.getConfig().setDegrees(AsoulUtil.getActualDegrees(degrees, Quadrant.THREE));
-		} else {
-			// 向下
-			bullet.getConfig().setDegrees(Direction.DOWN.degrees());
-		}
+		double degrees = AsoulUtil.calcEnemyShotDegrees(pMidX, pMidY, bMidX, bMidY);
+		bullet.getConfig().setDegrees(degrees);
 	}
 }

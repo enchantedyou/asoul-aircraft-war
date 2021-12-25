@@ -13,11 +13,11 @@ public class LittleBallBullet extends Bullet {
 
 	public LittleBallBullet() {
 		super(ResourceConst.LITTLE_BALL_BULLET, new EnemyBulletConfig(25, 25));
-		attack = 80;
+		attack = 180;
 	}
 
 	@Override
-	public void switchLevel(int level) {
+	public void switchLevel(int bulletLevel, int awakeLevel) {
 		throw new UnsupportedOperationException();
 	}
 }

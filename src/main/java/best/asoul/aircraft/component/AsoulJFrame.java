@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AsoulJFrame extends JFrame {
 
 	public AsoulJFrame() {
-		this.setTitle("枝江飞机大战");
+		this.setTitle("枝江雷霆战机");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setUndecorated(true);
 

@@ -1,5 +1,8 @@
 package best.asoul.aircraft.util;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.sound.sampled.Clip;
@@ -17,6 +20,8 @@ public class SoundUtil {
 
 	/** 背景音乐Clip对象集 **/
 	private static final AtomicReference<Clip> LAST_BGM_CLIP = new AtomicReference<>();
+	/** 已存在的Clip列表 **/
+	private static final List<Clip> CLIP_LIST = new CopyOnWriteArrayList<>();
 
 	private SoundUtil() {
 	}
@@ -29,8 +34,33 @@ public class SoundUtil {
 
 		final Clip nowClip = SoundResourceFactory.getAudioClip(soundKey);
 		nowClip.loop(GlobalConst.BGM_LOOP_COUNT);
-		while (!LAST_BGM_CLIP.compareAndSet(lastClip, nowClip)) {
-		}
+		CLIP_LIST.add(nowClip);
+		LAST_BGM_CLIP.getAndSet(nowClip);
+	}
+
+	private static void playSoundEffect(String energyRestored) {
+		final Clip clip = SoundResourceFactory.getAudioClip(energyRestored);
+		CLIP_LIST.add(clip);
+		clip.start();
+	}
+
+	/**
+	 * @Description 清理失效的声音切片
+	 * @Author Enchantedyou
+	 * @Date 2021/12/20-22:01
+	 * @return int
+	 */
+	public static int clearInvalidClip() {
+		AtomicInteger c = new AtomicInteger();
+		CLIP_LIST.removeIf(clip -> {
+			if (!clip.isActive()) {
+				clip.close();
+				c.getAndIncrement();
+				return true;
+			}
+			return false;
+		});
+		return c.get();
 	}
 
 	/**
@@ -87,7 +117,7 @@ public class SoundUtil {
 	 * @Date 2021/11/26-21:09
 	 */
 	public static void playEnergyRestored() {
-		SoundResourceFactory.getAudioClip(ResourceConst.ENERGY_RESTORED).start();
+		playSoundEffect(ResourceConst.ENERGY_RESTORED);
 	}
 
 	/**
@@ -96,7 +126,7 @@ public class SoundUtil {
 	 * @Date 2021/11/26-23:10
 	 */
 	public static void playEnemyExplode() {
-		SoundResourceFactory.getAudioClip(ResourceConst.ENEMY_EXPLODE).start();
+		playSoundEffect(ResourceConst.ENEMY_EXPLODE);
 	}
 
 	/**
@@ -105,7 +135,7 @@ public class SoundUtil {
 	 * @Date 2021/12/12-21:12
 	 */
 	public static void playGameReady() {
-		SoundResourceFactory.getAudioClip(ResourceConst.GAME_READY).start();
+		playSoundEffect(ResourceConst.GAME_READY);
 	}
 
 	/**
@@ -114,7 +144,7 @@ public class SoundUtil {
 	 * @Date 2021/12/12-21:15
 	 */
 	public static void playBossWarning() {
-		SoundResourceFactory.getAudioClip(ResourceConst.BOSS_WARNING).start();
+		playSoundEffect(ResourceConst.BOSS_WARNING);
 	}
 
 	/**
@@ -123,7 +153,7 @@ public class SoundUtil {
 	 * @Date 2021/12/15-23:08
 	 */
 	public static void playAvaRambo() {
-		SoundResourceFactory.getAudioClip(ResourceConst.AVA_RAMBO).start();
+		playSoundEffect(ResourceConst.AVA_RAMBO);
 	}
 
 	/**
@@ -132,6 +162,42 @@ public class SoundUtil {
 	 * @Date 2021/12/15-23:16
 	 */
 	public static void playAvaPushStream() {
-		SoundResourceFactory.getAudioClip(ResourceConst.AVA_PUSH_STREAM).start();
+		playSoundEffect(ResourceConst.AVA_PUSH_STREAM);
+	}
+
+	/**
+	 * @Description 玩家觉醒
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:08
+	 */
+	public static void playPlayerAwake() {
+		playSoundEffect(ResourceConst.AWAKE);
+	}
+
+	/**
+	 * @Description 防御
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:08
+	 */
+	public static void playDefense() {
+		playSoundEffect(ResourceConst.DEFENSE);
+	}
+
+	/**
+	 * @Description 治疗
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:08
+	 */
+	public static void playTreat() {
+		playSoundEffect(ResourceConst.TREAT);
+	}
+
+	/**
+	 * @Description 缓慢愈合
+	 * @Author Enchantedyou
+	 * @Date 2021/12/19-15:09
+	 */
+	public static void playSlowHeal() {
+		playSoundEffect(ResourceConst.SLOW_HEAL);
 	}
 }

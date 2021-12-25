@@ -13,11 +13,11 @@ public class LongOvalBullet extends Bullet {
 
 	public LongOvalBullet() {
 		super(ResourceConst.LONG_OVAL_BULLET, new EnemyBulletConfig(20, 80));
-		attack = 150;
+		attack = 120;
 	}
 
 	@Override
-	public void switchLevel(int level) {
+	public void switchLevel(int bulletLevel, int awakeLevel) {
 		throw new UnsupportedOperationException();
 	}
 }

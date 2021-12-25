@@ -1,17 +1,16 @@
 package best.asoul.aircraft.util;
 
 import java.io.*;
+import java.util.concurrent.locks.LockSupport;
 
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.context.GameContext;
 import best.asoul.aircraft.element.base.Aircraft;
-import best.asoul.aircraft.element.boost.AircraftShieldDriftBoost;
-import best.asoul.aircraft.element.boost.AircraftTreatmentDriftBoost;
-import best.asoul.aircraft.element.boost.BulletLevelUpDriftBoost;
-import best.asoul.aircraft.element.boost.DriftBoot;
+import best.asoul.aircraft.element.boost.*;
 import best.asoul.aircraft.entity.AircraftCamp;
-import best.asoul.aircraft.entity.Quadrant;
+import best.asoul.aircraft.entity.Direction;
 import best.asoul.aircraft.exception.AsoulException;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,35 +33,35 @@ public class AsoulUtil {
 	 * @Date 2021/11/20-23:10
 	 */
 	public static <T> T clone(T obj, Class<T> clazz) {
-		ObjectOutputStream oos = null;
-		ObjectInputStream ois = null;
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			oos = new ObjectOutputStream(bos);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
 			oos.writeObject(obj);
-
 			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-			ois = new ObjectInputStream(bis);
-			return clazz.cast(ois.readObject());
+			try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+				return clazz.cast(ois.readObject());
+			}
 		} catch (Exception e) {
-			log.error("对象深拷贝失败", e);
-			throw new AsoulException(e);
-		} finally {
-			if (oos != null) {
-				try {
-					oos.close();
-				} catch (IOException e) {
-					// 忽略
-				}
-			}
+			throw new AsoulException("对象深拷贝失败", e);
+		}
+	}
 
-			if (ois != null) {
-				try {
-					ois.close();
-				} catch (IOException e) {
-					// 忽略
-				}
+	/**
+	 * @Description 获取流的字节数组
+	 * @Author Enchantedyou
+	 * @Date 2021/12/23-23:32
+	 * @param inputStream
+	 * @return java.io.InputStream
+	 */
+	public static byte[] getStreamByteArray(InputStream inputStream) {
+		try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[1024];
+			int len;
+			while ((len = inputStream.read(buffer)) > -1) {
+				bos.write(buffer, 0, len);
 			}
+			return bos.toByteArray();
+		} catch (Exception e) {
+			throw new AsoulException("获取流的字节数组失败", e);
 		}
 	}
 
@@ -73,6 +72,10 @@ public class AsoulUtil {
 	 * @Date 2021/11/22-22:39
 	 */
 	public static void pause(long millis) {
+		if (millis <= 0L) {
+			return;
+		}
+
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
@@ -97,17 +100,19 @@ public class AsoulUtil {
 	 * @Date 2021/12/4-13:12
 	 */
 	public static void randCreateDriftBoost(Aircraft enemy) {
-		if (enemy.getCamp() != AircraftCamp.ENEMY || !rand(GlobalConst.BOOST_CREATE_PROBABILITY)) {
+		if (enemy.getCamp() == AircraftCamp.ASOUL || !rand(GlobalConst.BOOST_CREATE_PROBABILITY)) {
 			return;
 		}
 
 		DriftBoot driftBoot;
-		if (rand(70)) {
+		if (rand(40)) {
 			driftBoot = new BulletLevelUpDriftBoost(enemy);
 		} else if (rand(15)) {
 			driftBoot = new AircraftTreatmentDriftBoost(enemy);
-		} else {
+		} else if (rand(20)) {
 			driftBoot = new AircraftShieldDriftBoost(enemy);
+		} else {
+			driftBoot = new AvaDriftBoost(enemy);
 		}
 		GameContext.getStageDefine().getDriftBootList().add(driftBoot);
 	}
@@ -127,14 +132,55 @@ public class AsoulUtil {
 	}
 
 	/**
-	 * @Description 根据象限计算实际角度
+	 * @Description 计算敌机射击角度
 	 * @Author Enchantedyou
-	 * @Date 2021/12/5-22:15
-	 * @param degrees
-	 * @param quadrant
+	 * @Date 2021/12/19-0:19
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
 	 * @return double
 	 */
-	public static double getActualDegrees(double degrees, Quadrant quadrant) {
-		return degrees + quadrant.degreesOffset();
+	public static double calcEnemyShotDegrees(int x1, int y1, int x2, int y2) {
+		double hypotenuseDistance = calcDistanceBetweenPoints(x1, y1, x2, y2);
+		double horizontalDistance = calcDistanceBetweenPoints(x1, 0, x2, 0);
+
+		final double cosDegrees = Math.toDegrees(Math.acos(horizontalDistance / hypotenuseDistance));
+		final double sinDegrees = Math.toDegrees(Math.asin(horizontalDistance / hypotenuseDistance));
+
+		if (y2 > y1) {
+			if (x2 > x1) {
+				// 第二象限
+				return GlobalConst.MAX_QUADRANT_DEGREES * 2 - cosDegrees;
+			} else if (x2 < x1) {
+				// 第一象限
+				return cosDegrees;
+			} else {
+				return Direction.UP.degrees();
+			}
+		} else if (y2 < y1) {
+			if (x2 > x1) {
+				// 第三象限
+				return GlobalConst.MAX_QUADRANT_DEGREES * 3 - sinDegrees;
+			} else if (x2 < x1) {
+				// 第四象限
+				return GlobalConst.MAX_QUADRANT_DEGREES * 3 + sinDegrees;
+			} else {
+				return Direction.DOWN.degrees();
+			}
+		} else {
+			return x1 > x2 ? Direction.RIGHT.degrees() : Direction.LEFT.degrees();
+		}
+	}
+
+	/**
+	 * @Description 允许当前线程受暂停控制
+	 * @Author Enchantedyou
+	 * @Date 2021/12/22-22:22
+	 */
+	public static void enablePause() {
+		if (AsoulThreadHelper.isGamePause()) {
+			LockSupport.park();
+		}
 	}
 }

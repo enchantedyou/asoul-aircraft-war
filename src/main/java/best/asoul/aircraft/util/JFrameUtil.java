@@ -36,10 +36,17 @@ public class JFrameUtil {
 		if (aircraft.isDead()) {
 			return;
 		}
-		BufferedImage image;
+		final BufferedImage image = aircraft.getImage();
 		final FlyingConfig aircraftConfig = aircraft.getConfig();
-		image = aircraft.getImage();
 		g.drawImage(image, aircraftConfig.getX(), aircraftConfig.getY(), null);
+		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
+			// 画尾焰
+			final BufferedImage tailFlameImage = ImageResourceFactory.getImage(ResourceConst.TAIL_FLAME);
+			g.drawImage(tailFlameImage, aircraftConfig.getX() + 18, aircraftConfig.getY() + image.getHeight() - 30,
+					null);
+			g.drawImage(tailFlameImage, aircraftConfig.getX() + 35, aircraftConfig.getY() + image.getHeight() - 30,
+					null);
+		}
 	}
 
 	/**
@@ -49,23 +56,29 @@ public class JFrameUtil {
 	 * @param g
 	 * @param bullet
 	 */
-	public static void drawBullet(Graphics g, Bullet bullet, AircraftCamp camp) {
+	public static void drawBullet(Graphics2D g, Bullet bullet, Aircraft aircraft) {
 		final FlyingConfig bulletConfig = bullet.getConfig();
-		BufferedImage image = bullet.getImage();
 		double degrees = getFixedDegrees(bulletConfig.getDegrees());
-		// 在子弹贴图方向是下的情况下，纠正方向，使其以离开飞机的方向运动
-		if (camp == AircraftCamp.ENEMY) {
-			final Quadrant quadrant = getQuadrant(bulletConfig.getDegrees());
-			if (quadrant == Quadrant.NONE) {
-				degrees = -degrees - GlobalConst.MAX_QUADRANT_DEGREES;
-			} else {
-				// 垂直方向的子弹方向纠正：0°时-90°，90°时-180°，180°时-270°，270°时-360°
-				final double multiple = bulletConfig.getDegrees() / GlobalConst.MAX_QUADRANT_DEGREES;
-				degrees = -(multiple + 1D) * GlobalConst.MAX_QUADRANT_DEGREES;
-			}
-			image = rotateImage(bullet.getImage(), degrees);
+		// 纠正子弹角度，在子弹贴图方向是下的情况下，纠正方向，使其以离开飞机的方向运动
+		final Quadrant quadrant = getQuadrant(bulletConfig.getDegrees());
+		if (quadrant == Quadrant.NONE) {
+			degrees = -degrees - GlobalConst.MAX_QUADRANT_DEGREES;
+		} else {
+			// 垂直方向的子弹方向纠正：0°时-90°，90°时-180°，180°时-270°，270°时-360°
+			final double multiple = bulletConfig.getDegrees() / GlobalConst.MAX_QUADRANT_DEGREES;
+			degrees = -(multiple + 1D) * GlobalConst.MAX_QUADRANT_DEGREES;
 		}
+		final Composite originalComposite = g.getComposite();
+		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
+			// 玩家的子弹朝上，所以反转
+			degrees += GlobalConst.MAX_QUADRANT_DEGREES * 2;
+			// 玩家子弹透明度（暴走时变亮一点）
+			float alpha = aircraft.getBulletLevel() < GlobalConst.ENERGY_RESTORED_LEVEL ? 0.8f : 0.9f;
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		}
+		BufferedImage image = rotateImage(bullet.getImage(), degrees);
 		g.drawImage(image, bulletConfig.getX(), bulletConfig.getY(), null);
+		g.setComposite(originalComposite);
 	}
 
 	/**
@@ -95,10 +108,10 @@ public class JFrameUtil {
 		int w = bufferedimage.getWidth();
 		int h = bufferedimage.getHeight();
 		int type = bufferedimage.getColorModel().getTransparency();
+
 		BufferedImage img = new BufferedImage(w, h, type);
 		Graphics2D g = img.createGraphics();
-		g.setRenderingHint(
-				RenderingHints.KEY_INTERPOLATION,
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.rotate(Math.toRadians(degree), w / 2D, h / 2D);
 		g.drawImage(bufferedimage, 0, 0, null);
@@ -137,7 +150,11 @@ public class JFrameUtil {
 		final FlyingConfig aircraftConfig = aircraft.getConfig();
 
 		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
-			image = ImageResourceFactory.getImage(ResourceConst.PLAYER_BLOOD_LINE);
+			if (widthPercent > GlobalConst.SAFE_BLOOD_PERCENT) {
+				image = ImageResourceFactory.getImage(ResourceConst.PLAYER_SAFE_BLOOD_LINE);
+			} else {
+				image = ImageResourceFactory.getImage(ResourceConst.PLAYER_DANGER_BLOOD_LINE);
+			}
 			x += (GlobalConfig.SCREEN_WIDTH - image.getWidth()) / 2;
 		} else {
 			image = ImageResourceFactory.getImage(ResourceConst.ENEMY_BLOOD_LINE);

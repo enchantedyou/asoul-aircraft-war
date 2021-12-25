@@ -13,11 +13,11 @@ public class LittleRectangleBullet extends Bullet {
 
 	public LittleRectangleBullet() {
 		super(ResourceConst.LITTLE_RECTANGLE_BULLET, new EnemyBulletConfig(30, 30));
-		attack = 90;
+		attack = 150;
 	}
 
 	@Override
-	public void switchLevel(int level) {
+	public void switchLevel(int bulletLevel, int awakeLevel) {
 		throw new UnsupportedOperationException();
 	}
 }

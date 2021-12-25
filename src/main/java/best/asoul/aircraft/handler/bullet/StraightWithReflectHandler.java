@@ -1,5 +1,6 @@
 package best.asoul.aircraft.handler.bullet;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import best.asoul.aircraft.element.base.Aircraft;
@@ -27,7 +28,7 @@ public class StraightWithReflectHandler extends ShotHandler {
 
 	public StraightWithReflectHandler(boolean leftRightReflect, int bulletSpeed, long duration, long shotInterval,
 			Double... degreesOptions) {
-		super(AircraftCamp.ENEMY, 0, 0L);
+		super(Arrays.asList(AircraftCamp.ENEMY, AircraftCamp.BOSS), 0, 0L);
 		this.degreesOptions = Objects.requireNonNull(degreesOptions);
 		this.bulletSpeed = bulletSpeed;
 		this.shotInterval = shotInterval;
@@ -39,14 +40,9 @@ public class StraightWithReflectHandler extends ShotHandler {
 	public void shot(Aircraft aircraft) {
 		long startTime = System.currentTimeMillis();
 		while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
-			for (double degrees : degreesOptions) {
-				final Bullet bullet = createBullet(aircraft);
-				bullet.getConfig().setDegrees(degrees);
-				bullet.setLeftRightReflect(leftRightReflect);
-
-				if (bulletSpeed > 0) {
-					bullet.getConfig().setSpeed(bulletSpeed);
-				}
+			// 根据角度选项创建子弹，如果战机阵亡则结束射击
+			if (shotByDegreesOptions(aircraft)) {
+				return;
 			}
 
 			// 持续时间限制
@@ -60,5 +56,23 @@ public class StraightWithReflectHandler extends ShotHandler {
 				AsoulUtil.pause(aircraft.getBullet().getConfig().getCreateInterval());
 			}
 		}
+	}
+
+	private boolean shotByDegreesOptions(Aircraft aircraft) {
+		for (double degrees : degreesOptions) {
+			AsoulUtil.enablePause();
+			if (aircraft.isDead()) {
+				return true;
+			}
+
+			final Bullet bullet = createBullet(aircraft);
+			bullet.getConfig().setDegrees(degrees);
+			bullet.setLeftRightReflect(leftRightReflect);
+
+			if (bulletSpeed > 0) {
+				bullet.getConfig().setSpeed(bulletSpeed);
+			}
+		}
+		return false;
 	}
 }

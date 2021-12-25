@@ -9,6 +9,7 @@ import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.element.base.Bullet;
 import best.asoul.aircraft.entity.Quadrant;
+import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import best.asoul.aircraft.util.AsoulUtil;
 import best.asoul.aircraft.util.JFrameUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +31,12 @@ public class BulletMoveTask implements Runnable {
 
 	@Override
 	public void run() {
+		AsoulThreadHelper.readyAwait();
 		while (!Thread.currentThread().isInterrupted()) {
 			if (aircraft.isDead() && aircraft.getShotList().isEmpty()) {
 				break;
 			}
-
+			AsoulUtil.enablePause();
 			// 子弹移动
 			doBulletMove(aircraft);
 			AsoulUtil.pause(aircraft.getBullet().getConfig().getMoveInterval());

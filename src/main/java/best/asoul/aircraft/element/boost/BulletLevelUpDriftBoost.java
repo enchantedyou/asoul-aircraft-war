@@ -6,6 +6,7 @@ import best.asoul.aircraft.element.base.Flying;
 import best.asoul.aircraft.entity.AnimationEffectPlayer;
 import best.asoul.aircraft.entity.AnimationType;
 import best.asoul.aircraft.factory.AnimationResourceFactory;
+import best.asoul.aircraft.util.SoundUtil;
 
 /**
  * @Description 游离态子弹升级增强效果
@@ -22,6 +23,7 @@ public class BulletLevelUpDriftBoost extends DriftBoot {
 	public void boostAfter(Aircraft aircraft) {
 		// 子弹升级
 		if (aircraft.bulletLevelUp() && duration > 0L) {
+			SoundUtil.playEnergyRestored();
 			// 如果暴走则添加持有效果
 			aircraft.endowBoost(new EnergyRestoredHoldBoost(duration), duration);
 		}

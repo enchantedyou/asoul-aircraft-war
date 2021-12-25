@@ -10,5 +10,7 @@ public enum ResourceType {
 	/** 图片资源 **/
 	IMAGE,
 	/** 音乐资源 **/
-	SOUND
+	SOUND,
+	/** 动画资源 **/
+	ANIMATION
 }

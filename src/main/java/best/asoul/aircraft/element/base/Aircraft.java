@@ -11,10 +11,11 @@ import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.config.GlobalConfig;
 import best.asoul.aircraft.config.aircraft.AsoulAircraftConfig;
 import best.asoul.aircraft.constant.GlobalConst;
+import best.asoul.aircraft.context.GameContext;
 import best.asoul.aircraft.element.boost.HoldBoost;
-import best.asoul.aircraft.entity.AircraftCamp;
-import best.asoul.aircraft.entity.BoostType;
-import best.asoul.aircraft.entity.HpCalcMethod;
+import best.asoul.aircraft.entity.*;
+import best.asoul.aircraft.factory.AnimationResourceFactory;
+import best.asoul.aircraft.util.SoundUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -43,6 +44,8 @@ public abstract class Aircraft extends Flying implements Serializable {
 	protected transient List<HoldBoost> holdBoostList = new CopyOnWriteArrayList<>();
 	/** 射击链 **/
 	private ShotChain shotChain = new ShotChain(this);
+	/** 觉醒级别 **/
+	private AtomicInteger awakeLevel = new AtomicInteger(0);
 
 	protected Aircraft(String aircraftImage, Bullet bullet) {
 		super(aircraftImage, new AsoulAircraftConfig());
@@ -74,7 +77,7 @@ public abstract class Aircraft extends Flying implements Serializable {
 		// 子弹恢复为暴走前的等级
 		bulletRecover();
 		if (bulletLevel.get() == GlobalConst.ENERGY_RESTORED_LEVEL) {
-			bullet.switchLevel(bulletLevel.decrementAndGet());
+			bullet.switchLevel(bulletLevel.decrementAndGet(), awakeLevel.get());
 		}
 	}
 
@@ -89,20 +92,6 @@ public abstract class Aircraft extends Flying implements Serializable {
 	}
 
 	/**
-	 * @Description 子弹增强
-	 * @Author Enchantedyou
-	 * @Date 2021/11/29-21:42
-	 */
-	protected synchronized void bulletBoost() {
-		final FlyingConfig bulletConfig = bullet.getConfig();
-		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() - 4);
-		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() - 100);
-		bulletConfig.increaseSpeed(+25D);
-		// 子弹攻击力减半
-		bullet.setAttack(bullet.getAttack() / 2);
-	}
-
-	/**
 	 * @Description 子弹恢复
 	 * @Author Enchantedyou
 	 * @Date 2021/11/29-21:43
@@ -110,10 +99,20 @@ public abstract class Aircraft extends Flying implements Serializable {
 	protected synchronized void bulletRecover() {
 		final FlyingConfig bulletConfig = bullet.getConfig();
 		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() + 4);
-		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() + 100);
-		bulletConfig.increaseSpeed(-25D);
-		// 子弹攻击力恢复
-		bullet.setAttack(bullet.getAttack() * 2);
+		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() + 120);
+		bulletConfig.increaseSpeed(-10D);
+	}
+
+	/**
+	 * @Description 子弹增强
+	 * @Author Enchantedyou
+	 * @Date 2021/11/29-21:42
+	 */
+	protected synchronized void bulletBoost() {
+		final FlyingConfig bulletConfig = bullet.getConfig();
+		bulletConfig.setMoveInterval(bulletConfig.getMoveInterval() - 4);
+		bulletConfig.setCreateInterval(bulletConfig.getCreateInterval() - 120);
+		bulletConfig.increaseSpeed(+10D);
 	}
 
 	/**
@@ -155,6 +154,20 @@ public abstract class Aircraft extends Flying implements Serializable {
 
 	public ShotChain getShotChain() {
 		return shotChain;
+	}
+
+	public int getAwakeLevel() {
+		return awakeLevel.get();
+	}
+
+	/**
+	 * @Description 觉醒升级
+	 * @Author Enchantedyou
+	 * @Date 2021/12/18-16:55
+	 * @return int
+	 */
+	public int awakeLevelUp() {
+		return awakeLevel.incrementAndGet();
 	}
 
 	/**
@@ -233,7 +246,7 @@ public abstract class Aircraft extends Flying implements Serializable {
 			this.healthPoint += incrementHp;
 		}
 		if (originalHp != this.healthPoint) {
-			log.info("HP恢复：{}", this.healthPoint - originalHp);
+			log.debug("HP恢复：{}", this.healthPoint - originalHp);
 		}
 	}
 
@@ -299,11 +312,7 @@ public abstract class Aircraft extends Flying implements Serializable {
 	 * @return boolean
 	 */
 	public boolean isDead() {
-		if (getConfig().getY() >= GlobalConfig.SCREEN_HEIGHT || this.healthPoint <= 0) {
-			// 2021年12月13日20:55:00 战机死了不再清除子弹
-			return true;
-		}
-		return false;
+		return getConfig().getY() >= GlobalConfig.SCREEN_HEIGHT || this.healthPoint <= 0;
 	}
 
 	/**
@@ -369,6 +378,18 @@ public abstract class Aircraft extends Flying implements Serializable {
 	 */
 	public void removeExpiredBoost() {
 		holdBoostList.removeIf(b -> b.expiredAndRemove(this));
+	}
+
+	/**
+	 * @Description 飞机阵亡后的爆炸效果
+	 * @Author Enchantedyou
+	 * @Date 2021/12/25-12:30
+	 */
+	public void explodeAfterDead() {
+		final AnimationEffectPlayer effectPlayer = AnimationResourceFactory
+				.buildAnimationPlayer(AnimationType.AIRCRAFT_EXPLODE, this);
+		GameContext.getStageDefine().getEffectList().add(effectPlayer);
+		SoundUtil.playEnemyExplode();
 	}
 
 	@Override

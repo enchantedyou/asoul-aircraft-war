@@ -6,9 +6,9 @@ import best.asoul.aircraft.constant.ResourceConst;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.element.base.Bullet;
 import best.asoul.aircraft.entity.AircraftCamp;
+import best.asoul.aircraft.entity.BossType;
 import best.asoul.aircraft.handler.bullet.ShotToPlayerDirectionHandler;
 import best.asoul.aircraft.util.AsoulUtil;
-import best.asoul.aircraft.util.SoundUtil;
 
 /**
  * @Description 抽象的敌机
@@ -17,7 +17,10 @@ import best.asoul.aircraft.util.SoundUtil;
  */
 public abstract class EnemyAircraft extends Aircraft {
 
-	public EnemyAircraft(String imageKey, Bullet bullet) {
+	/** boss类型 **/
+	private BossType bossType;
+
+	protected EnemyAircraft(String imageKey, Bullet bullet) {
 		super(imageKey, bullet);
 		initBaseInfo(10000);
 	}
@@ -32,7 +35,7 @@ public abstract class EnemyAircraft extends Aircraft {
 		shotChain.append(new ShotToPlayerDirectionHandler(30, 30, 18, 0, 500L));
 	}
 
-	public EnemyAircraft(String imageKey, Bullet bullet, int maxHealthPoint) {
+	protected EnemyAircraft(String imageKey, Bullet bullet, int maxHealthPoint) {
 		super(imageKey, bullet);
 		initBaseInfo(maxHealthPoint);
 	}
@@ -52,13 +55,24 @@ public abstract class EnemyAircraft extends Aircraft {
 			flyingConfig.determineSize(140, 135);
 		} else if (ResourceConst.ENEMY_LEVEL2_WHITE_AIRCRAFT.equals(imageKey)) {
 			flyingConfig.determineSize(245, 300);
+		} else if (ResourceConst.BOSS_TOOLS_PEOPLE.equals(imageKey)) {
+			flyingConfig.determineSize(300, 300);
 		}
 	}
 
 	@Override
 	public void afterDead() {
-		SoundUtil.playEnemyExplode();
+		// 飞机爆炸的动画和音效
+		explodeAfterDead();
 		// 敌机阵亡后概率出现增益效果
 		AsoulUtil.randCreateDriftBoost(this);
+	}
+
+	public BossType getBossType() {
+		return bossType;
+	}
+
+	public void setBossType(BossType bossType) {
+		this.bossType = bossType;
 	}
 }

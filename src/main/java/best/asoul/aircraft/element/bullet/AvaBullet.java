@@ -13,21 +13,23 @@ import best.asoul.aircraft.element.base.Bullet;
 public class AvaBullet extends Bullet {
 
 	public AvaBullet() {
-		super(ResourceConst.AVA_LEVEL1_BULLET, new AsoulBulletConfig(45, 190));
-		attack = 1050;
+		super(ResourceConst.AVA_JELLYFISH_BULLET, new AsoulBulletConfig(45, 190));
+		attack = 160;
 	}
 
 	@Override
-	public void switchLevel(int level) {
-		if (level == GlobalConst.BULLET_LEVEL_1) {
-			setImageKey(ResourceConst.AVA_LEVEL1_BULLET);
-			flyingConfig.determineSize(45, 190);
-		} else if (level == GlobalConst.BULLET_LEVEL_2) {
-			setImageKey(ResourceConst.AVA_LEVEL2_BULLET);
-			flyingConfig.determineSize(50, 180);
-		} else if (level >= GlobalConst.ENERGY_RESTORED_LEVEL) {
-			setImageKey(ResourceConst.AVA_LEVEL3_BULLET);
-			flyingConfig.determineSize(60, 190);
+	public void switchLevel(int bulletLevel, int awakeLevel) {
+		if (bulletLevel == GlobalConst.BULLET_LEVEL_1) {
+			setImageKey(ResourceConst.AVA_JELLYFISH_BULLET);
+		} else if (bulletLevel == GlobalConst.BULLET_LEVEL_2) {
+			if (awakeLevel >= 2) {
+				// 散射
+				setImageKey(ResourceConst.AVA_RAINDROPS_BULLET);
+			} else {
+				setImageKey(ResourceConst.AVA_JELLYFISH_BULLET);
+			}
+		} else if (bulletLevel >= GlobalConst.ENERGY_RESTORED_LEVEL) {
+			setImageKey(ResourceConst.AVA_DRILL_BULLET);
 		}
 	}
 }

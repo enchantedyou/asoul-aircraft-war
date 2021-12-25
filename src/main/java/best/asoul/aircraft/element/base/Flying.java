@@ -37,10 +37,6 @@ public abstract class Flying implements Serializable {
 		return (null == image) ? ImageResourceFactory.getImage(imageKey) : image;
 	}
 
-	public void setImage(BufferedImage image) {
-		this.image = image;
-	}
-
 	public FlyingConfig getConfig() {
 		if (null == flyingConfig) {
 			throw new AsoulException("当前飞行物未指定配置");
@@ -55,6 +51,8 @@ public abstract class Flying implements Serializable {
 	public void setImageKey(String imageKey) {
 		this.imageKey = imageKey;
 		this.image = ImageResourceFactory.getImage(imageKey);
+		// 默认为图像大小
+		flyingConfig.determineSize(image.getWidth(), image.getHeight());
 	}
 
 	public void setConfig(FlyingConfig flyingConfig) {

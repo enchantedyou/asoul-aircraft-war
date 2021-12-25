@@ -6,9 +6,10 @@ import best.asoul.aircraft.element.base.Flying;
 import best.asoul.aircraft.entity.AnimationEffectPlayer;
 import best.asoul.aircraft.entity.AnimationType;
 import best.asoul.aircraft.factory.AnimationResourceFactory;
+import best.asoul.aircraft.util.SoundUtil;
 
 /**
- * @Description 游离态战机治疗效果
+ * @Description 游离态护盾效果
  * @Author Enchantedyou
  * @Date 2021/12/4-13:34
  */
@@ -21,6 +22,7 @@ public class AircraftShieldDriftBoost extends DriftBoot {
 
 	@Override
 	public void boostAfter(Aircraft aircraft) {
+		SoundUtil.playDefense();
 		aircraft.endowBoost(new AbsoluteDefenseHoldBoost(duration), duration);
 	}
 

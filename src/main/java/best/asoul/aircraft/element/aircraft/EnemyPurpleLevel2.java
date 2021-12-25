@@ -23,7 +23,7 @@ public class EnemyPurpleLevel2 extends EnemyAircraft {
 	}
 
 	public EnemyPurpleLevel2() {
-		this(30000);
+		this(20000);
 	}
 
 	@Override

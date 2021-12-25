@@ -1,8 +1,8 @@
 package best.asoul.aircraft.factory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,6 +13,8 @@ import javax.sound.sampled.FloatControl;
 import best.asoul.aircraft.config.UserConfig;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.exception.AsoulException;
+import best.asoul.aircraft.handler.resource.ResourceDecoder;
+import best.asoul.aircraft.util.AsoulUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,7 +29,7 @@ public class SoundResourceFactory {
 	}
 
 	/** 音效资源 **/
-	private static final Map<String, URL> AUDIO_MAP = new ConcurrentHashMap<>();
+	private static final Map<String, byte[]> AUDIO_MAP = new ConcurrentHashMap<>();
 
 	/**
 	 * @Description 获取音效资源文件
@@ -38,14 +40,15 @@ public class SoundResourceFactory {
 	 */
 	public static Clip getAudioClip(String soundKey) {
 		try {
-			final URL url = AUDIO_MAP.get(soundKey);
 			Clip audioClip = AudioSystem.getClip();
-			audioClip.open(AudioSystem.getAudioInputStream(url));
+			// 输入流的读取是单向的，此处是为了能够复用
+			final InputStream inputStream = new ByteArrayInputStream(AUDIO_MAP.get(soundKey));
+			audioClip.open(AudioSystem.getAudioInputStream(inputStream));
 			// 音量控制
 			controlVolume(soundKey, audioClip);
 			return audioClip;
 		} catch (Exception e) {
-			throw new AsoulException("音效资源加载失败：", e);
+			throw new AsoulException("音效资源加载失败：" + soundKey, e);
 		}
 	}
 
@@ -56,19 +59,18 @@ public class SoundResourceFactory {
 	 * @param file
 	 */
 	protected static void fillAudioResource(File file) {
-		final String soundKey = file.getName().split("\\.")[0];
-		log.info("加载音效资源：{}", soundKey);
-		try {
-			AUDIO_MAP.put(soundKey, file.toURL());
-		} catch (IOException e) {
-			log.error("音效资源加载失败：{}", soundKey);
-		}
+		ResourceDecoder.decode(file, (fileName, inputStream) -> {
+			final String soundKey = fileName.split("\\.")[0];
+			log.info("加载音效资源：{}", soundKey);
+			AUDIO_MAP.put(soundKey, AsoulUtil.getStreamByteArray(inputStream));
+		});
 	}
 
 	private static void controlVolume(String soundKey, Clip audioClip) {
+		final UserConfig userConfig = UserConfig.getInstance();
 		FloatControl control = (FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN);
 		final float range = control.getMinimum() + GlobalConst.VOLUME_OFFSET;
-		int volume = soundKey.contains(GlobalConst.BGM_KEY) ? UserConfig.BGM_VOLUME : UserConfig.EFFECT_VOLUME;
+		int volume = soundKey.contains(GlobalConst.BGM_KEY) ? userConfig.getBgmVolume() : userConfig.getEffectVolume();
 		control.setValue(range * (GlobalConst.MAX_VOLUME - volume) / GlobalConst.MAX_VOLUME);
 	}
 }

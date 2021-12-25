@@ -17,12 +17,20 @@ public class ResourceConst {
 	public static final String MENU_BACKGROUND = "menu_background";
 	/** 玩家血条底架 **/
 	public static final String PLAYER_BLOOD_BASE = "player_blood_base";
-	/** 玩家血条 **/
-	public static final String PLAYER_BLOOD_LINE = "player_blood_line";
+	/** 玩家危险血条 **/
+	public static final String PLAYER_DANGER_BLOOD_LINE = "player_danger_blood_line";
+	/** 玩家安全血条 **/
+	public static final String PLAYER_SAFE_BLOOD_LINE = "player_safe_blood_line";
 	/** 敌方血条 **/
 	public static final String ENEMY_BLOOD_LINE = "enemy_blood_line";
 	/** 向晚战机 **/
 	public static final String AVA_AIRCRAFT = "ava_aircraft";
+	/** 普信草 **/
+	public static final String BOSS_TOOLS_PEOPLE = "boss_tools_people";
+	/** 尾焰 **/
+	public static final String TAIL_FLAME = "tail_flame";
+	/** 骷髅boss **/
+	public static final String BOSS_SKELETON = "boss_skeleton";
 
 	/** 向晚1级子弹 **/
 	public static final String AVA_LEVEL1_BULLET = "ava_level1_bullet";
@@ -38,6 +46,16 @@ public class ResourceConst {
 	public static final String LONG_OVAL_BULLET = "long_oval_bullet";
 	/** 中弧形子弹 **/
 	public static final String MID_ARC_BULLET = "mid_arc_bullet";
+	/** boss波形子弹 **/
+	public static final String BOSS_WAVE_BULLET = "boss_wave_bullet";
+	/** boss骷髅子弹 **/
+	public static final String SKELETON_BULLET = "skeleton_bullet";
+	/** 向晚雨点子弹->盲盒：BV1kU4y1L7Bw **/
+	public static final String AVA_RAINDROPS_BULLET = "ava_raindrops_bullet";
+	/** 向晚水母子弹->盲盒：BV1Qv411h7bE **/
+	public static final String AVA_JELLYFISH_BULLET = "ava_jellyfish_bullet";
+	/** 向晚钻头子弹->盲盒：BV11T4y1o7YY **/
+	public static final String AVA_DRILL_BULLET = "ava_drill_bullet";
 
 	/** 1级蓝色敌机 **/
 	public static final String ENEMY_LEVEL1_BLUE_AIRCRAFT = "enemy_level1_blue";
@@ -71,4 +89,12 @@ public class ResourceConst {
 	public static final String AVA_RAMBO = "ava_rambo";
 	/** 向晚：怎么推流辣！ **/
 	public static final String AVA_PUSH_STREAM = "ava_push_stream";
+	/** 觉醒 **/
+	public static final String AWAKE = "awake";
+	/** 缓慢愈合 **/
+	public static final String SLOW_HEAL = "slow_heal";
+	/** 治疗 **/
+	public static final String TREAT = "treat";
+	/** 防御 **/
+	public static final String DEFENSE = "defense";
 }

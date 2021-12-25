@@ -17,15 +17,15 @@ public class AsoulAircraft extends Aircraft {
 
 	public AsoulAircraft(String imageKey, Bullet bullet) {
 		super(imageKey, bullet);
-		initHealthPoint(5000 * 10);
+		initHealthPoint(6000);
 		super.camp = AircraftCamp.ASOUL;
-		flyingConfig.determineSize(50, 50);
+		flyingConfig.determineSize(30, 30);
 	}
 
 	@Override
 	public boolean bulletLevelUp() {
 		int level = bulletLevel.incrementAndGet();
-		bullet.switchLevel(level);
+		bullet.switchLevel(level, getAwakeLevel());
 		if (level >= GlobalConst.ENERGY_RESTORED_LEVEL) {
 			triggerEnergyRestored();
 			// 如果子弹升级后刚好到达暴走等级，说明是从未暴走状态切换为暴走状态，否则为延续暴走状态，不再重复增强子弹
@@ -44,12 +44,12 @@ public class AsoulAircraft extends Aircraft {
 
 	@Override
 	public void afterDead() {
+		explodeAfterDead();
 		SoundUtil.playAvaRambo();
 	}
 
 	private void triggerEnergyRestored() {
 		// 触发暴走
 		bulletLevel.getAndSet(GlobalConst.ENERGY_RESTORED_LEVEL);
-		SoundUtil.playEnergyRestored();
 	}
 }

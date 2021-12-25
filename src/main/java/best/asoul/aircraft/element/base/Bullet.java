@@ -16,23 +16,34 @@ public abstract class Bullet extends Flying implements Serializable {
 	/** 碰到左右两边的墙是否反射 **/
 	protected boolean leftRightReflect;
 
-	public Bullet(String imageKey, FlyingConfig bulletConfig) {
+	protected Bullet(String imageKey, FlyingConfig bulletConfig) {
 		super(imageKey, bulletConfig);
 	}
 
 	/**
 	 * @Description 切换子弹等级
 	 * @Author Enchantedyou
-	 * @Date 2021/11/28-23:32
-	 * @param level
+	 * @Date 2021/12/21-21:56
+	 * @param bulletLevel
+	 * @param awakeLevel
 	 */
-	public abstract void switchLevel(int level);
+	public abstract void switchLevel(int bulletLevel, int awakeLevel);
 
-	public void setAttack(int attack) {
+	public synchronized void setAttack(int attack) {
 		this.attack = attack;
 	}
 
-	public int getAttack() {
+	/**
+	 * @Description 攻击力提升
+	 * @Author Enchantedyou
+	 * @Date 2021/12/18-16:41
+	 * @param attack
+	 */
+	public synchronized void increaseAttack(int attack) {
+		this.attack += attack;
+	}
+
+	public synchronized int getAttack() {
 		return attack;
 	}
 
