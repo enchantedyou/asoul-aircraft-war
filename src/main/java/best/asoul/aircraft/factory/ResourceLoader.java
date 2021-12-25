@@ -24,25 +24,19 @@ public class ResourceLoader {
 	}
 
 	/**
-	 * @Description 递归加载文件
+	 * @Description 加载资源文件
 	 * @Author Enchantedyou
 	 * @Date 2021/11/20-14:32
-	 * @param rootPath
+	 * @param resourceFilePath
 	 * @param callBack
 	 */
-	private static void loadFile(String rootPath, FileLoadInvoker callBack) {
-		final File[] files = new File(rootPath).listFiles();
-		if (null == files || files.length == 0) {
+	private static void loadFile(String resourceFilePath, FileLoadInvoker callBack) {
+		final File resourceFile = Paths.get(resourceFilePath).toFile();
+		if (!resourceFile.exists() || resourceFile.isDirectory()) {
+			log.warn("资源文件丢失：{}", resourceFile.getPath());
 			return;
 		}
-
-		for (File file : files) {
-			if (file.isDirectory()) {
-				loadFile(file.getPath(), callBack);
-			} else {
-				callBack.invoke(file);
-			}
-		}
+		callBack.invoke(resourceFile);
 	}
 
 	/**
@@ -51,7 +45,7 @@ public class ResourceLoader {
 	 * @Date 2021/11/20-13:33
 	 */
 	public static void loadImage() {
-		loadFile(getRootPath("/image"), ImageResourceFactory::fillImageResource);
+		loadFile(getFullPath("/image" + GlobalConfig.SECRET_FILE_SUFFIX), ImageResourceFactory::fillImageResource);
 	}
 
 	/**
@@ -60,7 +54,7 @@ public class ResourceLoader {
 	 * @Date 2021/11/26-21:05
 	 */
 	public static void loadSound() {
-		loadFile(getRootPath("/sound"), SoundResourceFactory::fillAudioResource);
+		loadFile(getFullPath("/sound" + GlobalConfig.SECRET_FILE_SUFFIX), SoundResourceFactory::fillAudioResource);
 	}
 
 	/**
@@ -69,7 +63,8 @@ public class ResourceLoader {
 	 * @Date 2021/11/27-17:58
 	 */
 	public static void loadAnimation() {
-		loadFile(getRootPath("/animation"), AnimationResourceFactory::fillAnimationResource);
+		loadFile(getFullPath("/animation" + GlobalConfig.SECRET_FILE_SUFFIX),
+				AnimationResourceFactory::fillAnimationResource);
 	}
 
 	/**
@@ -79,8 +74,8 @@ public class ResourceLoader {
 	 * @return java.util.Properties
 	 */
 	public static Properties loadUserConfig() {
-		final String userConfigPath = getRootPath("/config/" + GlobalConfig.USER_CONFIG_FILE_NAME);
-		try (final InputStream inputStream = Files.newInputStream(Paths.get(userConfigPath.substring(1)))) {
+		final String userConfigPath = getFullPath("/config/" + GlobalConfig.USER_CONFIG_FILE_NAME);
+		try (final InputStream inputStream = Files.newInputStream(Paths.get(userConfigPath))) {
 			Properties properties = new Properties();
 			properties.load(inputStream);
 			return properties;
@@ -89,11 +84,18 @@ public class ResourceLoader {
 		}
 	}
 
-	private static String getRootPath(String relativePath) {
+	/**
+	 * @Description 获取工程路径下文件的全路径
+	 * @Author Enchantedyou
+	 * @Date 2021/12/25-14:42
+	 * @param relativePath
+	 * @return java.lang.String
+	 */
+	public static String getFullPath(String relativePath) {
 		final URL url = ResourceLoader.class.getResource("/");
 		if (url != null) {
-			return url.getPath() + relativePath;
+			return url.getPath().substring(1) + relativePath;
 		}
-		return System.getProperty("user.dir") + "/bin" + relativePath;
+		return System.getProperty("user.dir") + File.separator + "bin" + relativePath;
 	}
 }

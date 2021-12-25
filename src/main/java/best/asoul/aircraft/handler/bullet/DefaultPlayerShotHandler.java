@@ -85,7 +85,7 @@ public class DefaultPlayerShotHandler extends ShotHandler {
 	}
 
 	@Override
-	public void setBeforeNextHandleInvoker(Invoker beforeNextHandleInvoker) {
+	public ShotHandler setBeforeNextHandleInvoker(Invoker beforeNextHandleInvoker) {
 		throw new UnsupportedOperationException();
 	}
 }

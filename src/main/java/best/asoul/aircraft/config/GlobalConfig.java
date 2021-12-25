@@ -39,7 +39,7 @@ public class GlobalConfig {
 	public static final Pattern SECRET_RESOURCE_SPLIT_PATTERN = Pattern
 			.compile(SECRET_START_TOKEN + "(.*?)" + SECRET_END_TOKEN);
 	/** 加密文件后缀 **/
-	public static final String SECRET_FILE_SUFFIX = "asoul";
+	public static final String SECRET_FILE_SUFFIX = ".asoul";
 	/** 加密秘钥 **/
 	public static final String SECRET_KEY = "Hello!WeAreAsoul";
 

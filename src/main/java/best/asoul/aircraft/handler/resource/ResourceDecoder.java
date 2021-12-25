@@ -56,7 +56,7 @@ public class ResourceDecoder {
 						.replace(GlobalConfig.SECRET_END_TOKEN, "");
 				final byte[] decode = Base64.getDecoder().decode(encodeContent.substring(prevIndexOf, currentIndexOf));
 				prevIndexOf = currentIndexOf + group.length();
-				// 对解密的文件流进行回调处理
+				// 对解密的文件输入流进行回调处理
 				invoker.invoke(fileName, new ByteArrayInputStream(decode));
 			}
 		} catch (Exception e) {

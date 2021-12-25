@@ -11,10 +11,11 @@ import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.config.GlobalConfig;
 import best.asoul.aircraft.config.aircraft.AsoulAircraftConfig;
 import best.asoul.aircraft.constant.GlobalConst;
+import best.asoul.aircraft.context.GameContext;
 import best.asoul.aircraft.element.boost.HoldBoost;
-import best.asoul.aircraft.entity.AircraftCamp;
-import best.asoul.aircraft.entity.BoostType;
-import best.asoul.aircraft.entity.HpCalcMethod;
+import best.asoul.aircraft.entity.*;
+import best.asoul.aircraft.factory.AnimationResourceFactory;
+import best.asoul.aircraft.util.SoundUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -377,6 +378,18 @@ public abstract class Aircraft extends Flying implements Serializable {
 	 */
 	public void removeExpiredBoost() {
 		holdBoostList.removeIf(b -> b.expiredAndRemove(this));
+	}
+
+	/**
+	 * @Description 飞机阵亡后的爆炸效果
+	 * @Author Enchantedyou
+	 * @Date 2021/12/25-12:30
+	 */
+	public void explodeAfterDead() {
+		final AnimationEffectPlayer effectPlayer = AnimationResourceFactory
+				.buildAnimationPlayer(AnimationType.AIRCRAFT_EXPLODE, this);
+		GameContext.getStageDefine().getEffectList().add(effectPlayer);
+		SoundUtil.playEnemyExplode();
 	}
 
 	@Override

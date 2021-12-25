@@ -42,8 +42,9 @@ public abstract class AircraftCreateHandler {
 	 * @Author Enchantedyou
 	 * @Date 2021/11/22-21:43
 	 */
-	public void create() {
+	public Aircraft create() {
 		initAircraft(aircraft);
+		return aircraft;
 	}
 
 	protected AircraftCreateHandler(int count, Aircraft aircraft, List<Aircraft> aircraftList) {

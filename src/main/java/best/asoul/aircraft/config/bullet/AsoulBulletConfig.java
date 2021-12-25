@@ -21,7 +21,7 @@ public class AsoulBulletConfig extends FlyingConfig implements Serializable {
 		super.createInterval = 145;
 		// 偏移量4
 		super.moveInterval = 10;
-		super.speed = 10;
+		super.speed = 11;
 		super.degrees = Direction.UP.degrees();
 	}
 }

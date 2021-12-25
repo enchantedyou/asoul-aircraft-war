@@ -17,7 +17,7 @@ public class AsoulAircraft extends Aircraft {
 
 	public AsoulAircraft(String imageKey, Bullet bullet) {
 		super(imageKey, bullet);
-		initHealthPoint(5000);
+		initHealthPoint(6000);
 		super.camp = AircraftCamp.ASOUL;
 		flyingConfig.determineSize(30, 30);
 	}
@@ -44,6 +44,7 @@ public class AsoulAircraft extends Aircraft {
 
 	@Override
 	public void afterDead() {
+		explodeAfterDead();
 		SoundUtil.playAvaRambo();
 	}
 

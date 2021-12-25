@@ -7,7 +7,7 @@ package best.asoul.aircraft.entity;
  */
 public enum AnimationType {
 	/** 飞机爆炸动画 **/
-	AIRCRAFT_EXPLODE("aircraft_explode", 8, 300, 300, 0, 3, false),
+	AIRCRAFT_EXPLODE("aircraft_explode", 8, 300, 300, 0, 2, false),
 	/** 子弹升级buff动画 **/
 	BULLET_LEVEL_UP("bullet_level_up", 14, 109, 67, 0, 5, true),
 	/** buff光环动画 **/

@@ -14,18 +14,18 @@ public final class DefaultStageDefine extends StageDefine {
 
 	@Override
 	protected void enemyCreateHandler() {
+		// 第一关
+		createStage1();
+	}
+
+	private void createStage1() {
 		// 创建模板飞机
 		EnemyBlueLevel1 blueLevel1 = new EnemyBlueLevel1();
 		EnemyRedLevel1 redLevel1 = new EnemyRedLevel1();
 		EnemyBlueLevel2 blueLevel2 = new EnemyBlueLevel2();
 		EnemyPurpleLevel2 purpleLevel2 = new EnemyPurpleLevel2();
 		EnemyWhiteLevel2 whiteLevel2 = new EnemyWhiteLevel2();
-		// 第一关
-		createStage1(blueLevel1, redLevel1, blueLevel2, purpleLevel2, whiteLevel2);
-	}
 
-	private void createStage1(EnemyBlueLevel1 blueLevel1, EnemyRedLevel1 redLevel1, EnemyBlueLevel2 blueLevel2,
-			EnemyPurpleLevel2 purpleLevel2, EnemyWhiteLevel2 whiteLevel2) {
 		// 5蓝lv1
 		createEnemy(blueLevel1, null, 5);
 		// 5红lv1
@@ -38,6 +38,9 @@ public final class DefaultStageDefine extends StageDefine {
 		createEnemy(blueLevel1, purpleLevel2, 5);
 		// 4红lv1，中蓝lv2
 		createEnemy(redLevel1, blueLevel2, 5);
+		// 小boss
+		createBoss(new BossToolsPeople());
+
 		// 2蓝lv2，中白lv2
 		createEnemy(blueLevel2, whiteLevel2, 3);
 		// 2紫lv2，中白lv2
@@ -46,8 +49,12 @@ public final class DefaultStageDefine extends StageDefine {
 		createEnemy(whiteLevel2, purpleLevel2, 3);
 		// 4蓝lv2，1白lv2
 		createEnemy(blueLevel2, whiteLevel2, 5);
-		// boss
-		createBoss(new BossToolsPeople());
+		// 5蓝lv2
+		createEnemy(blueLevel2, null, 5);
+		// 5紫lv2
+		createEnemy(purpleLevel2, null, 5);
+		// 终极boss
+		createBoss(new BossSkeleton());
 	}
 
 	private void createEnemy(EnemyAircraft enemyAircraft, EnemyAircraft mid, int count) {

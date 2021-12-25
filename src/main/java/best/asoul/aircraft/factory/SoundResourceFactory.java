@@ -41,6 +41,7 @@ public class SoundResourceFactory {
 	public static Clip getAudioClip(String soundKey) {
 		try {
 			Clip audioClip = AudioSystem.getClip();
+			// 输入流的读取是单向的，此处是为了能够复用
 			final InputStream inputStream = new ByteArrayInputStream(AUDIO_MAP.get(soundKey));
 			audioClip.open(AudioSystem.getAudioInputStream(inputStream));
 			// 音量控制

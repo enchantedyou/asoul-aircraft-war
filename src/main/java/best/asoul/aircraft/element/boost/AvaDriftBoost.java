@@ -43,7 +43,7 @@ public class AvaDriftBoost extends DriftBoot {
 		} else {
 			// 后续觉醒：子弹升级
 			if (aircraft.bulletLevelUp() && duration > 0L) {
-				// 如果暴走则添加持有效果
+				// 如果已暴走则追加暴走时长
 				aircraft.endowBoost(new EnergyRestoredHoldBoost(duration), duration);
 			}
 			SoundUtil.playPlayerAwake();

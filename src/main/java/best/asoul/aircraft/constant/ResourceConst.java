@@ -29,6 +29,8 @@ public class ResourceConst {
 	public static final String BOSS_TOOLS_PEOPLE = "boss_tools_people";
 	/** 尾焰 **/
 	public static final String TAIL_FLAME = "tail_flame";
+	/** 骷髅boss **/
+	public static final String BOSS_SKELETON = "boss_skeleton";
 
 	/** 向晚1级子弹 **/
 	public static final String AVA_LEVEL1_BULLET = "ava_level1_bullet";
@@ -45,9 +47,15 @@ public class ResourceConst {
 	/** 中弧形子弹 **/
 	public static final String MID_ARC_BULLET = "mid_arc_bullet";
 	/** boss波形子弹 **/
-	public static final String BOSS_WAVE_BULLET = "boss_wave";
-	/** 向晚雨点子弹，枝江暴雨 **/
+	public static final String BOSS_WAVE_BULLET = "boss_wave_bullet";
+	/** boss骷髅子弹 **/
+	public static final String SKELETON_BULLET = "skeleton_bullet";
+	/** 向晚雨点子弹->盲盒：BV1kU4y1L7Bw **/
 	public static final String AVA_RAINDROPS_BULLET = "ava_raindrops_bullet";
+	/** 向晚水母子弹->盲盒：BV1Qv411h7bE **/
+	public static final String AVA_JELLYFISH_BULLET = "ava_jellyfish_bullet";
+	/** 向晚钻头子弹->盲盒：BV11T4y1o7YY **/
+	public static final String AVA_DRILL_BULLET = "ava_drill_bullet";
 
 	/** 1级蓝色敌机 **/
 	public static final String ENEMY_LEVEL1_BLUE_AIRCRAFT = "enemy_level1_blue";

@@ -58,7 +58,7 @@ public class ResourceEncoder {
 		}
 		// 拼接加密文件的路径
 		Path secretFilePath = Paths.get(dirPath + File.separator
-				+ resourceType.toString().toLowerCase() + "."
+				+ resourceType.toString().toLowerCase()
 				+ GlobalConfig.SECRET_FILE_SUFFIX);
 		String secretContent = builder.toString();
 

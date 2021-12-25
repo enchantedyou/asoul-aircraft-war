@@ -8,7 +8,6 @@ import best.asoul.aircraft.config.UserConfig;
 import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.thread.base.AsoulThreadHelper;
 import best.asoul.aircraft.util.AsoulUtil;
-import best.asoul.aircraft.util.SoundUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,9 +27,8 @@ public class ScreenRefreshTask implements Runnable {
 
 	@Override
 	public void run() {
-		// 提交游戏状态监控线程
-		AsoulThreadHelper.submitTask(new GameReadyTask());
-
+		// 提交游戏监控线程
+		AsoulThreadHelper.submitTask(new GameMonitorTask());
 		// 每隔5秒输出一次线程池状态
 		final long threadPoolMonitorInterval = 5000L;
 		long t = System.currentTimeMillis();
@@ -50,8 +48,6 @@ public class ScreenRefreshTask implements Runnable {
 						threadPool.getLargestPoolSize());
 				// 定期清理已完成的核心线程数外的线程
 				AsoulThreadHelper.getTaskList().removeIf(thread -> thread.getState() == Thread.State.TERMINATED);
-				// 定期清理失效的声音切片
-				log.info("清理失效的音效资源数：{}", SoundUtil.clearInvalidClip());
 			}
 		}
 	}

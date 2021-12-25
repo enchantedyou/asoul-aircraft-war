@@ -46,7 +46,7 @@ public class GlobalConst {
 	/** 并排子弹间距 **/
 	public static final int BULLET_DISTANCE = 10;
 	/** 敌机阵亡后出现增益效果的概率 **/
-	public static final int BOOST_CREATE_PROBABILITY = 80;
+	public static final int BOOST_CREATE_PROBABILITY = 42;
 	/** 鼠标距离战机距离的上限，超过该距离则不随着鼠标移动，防止作弊 **/
 	public static final int MOUSE_AIRCRAFT_DISTANCE_LIMIT = 800;
 	/** 每个象限的最大角度 **/
@@ -55,4 +55,8 @@ public class GlobalConst {
 	public static final double DEGREES_OF_CIRCLE = MAX_QUADRANT_DEGREES * 4;
 	/** 安全血线百分比 **/
 	public static final double SAFE_BLOOD_PERCENT = 30D;
+	/** boss阵亡后爆炸次数 **/
+	public static final int BOSS_DEAD_EXPLODE_COUNT = 10;
+	/** boss阵亡后爆炸间隔 **/
+	public static final long BOSS_DEAD_EXPLODE_INTERVAL = 500L;
 }

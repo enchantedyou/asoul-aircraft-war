@@ -2,19 +2,17 @@
 <configuration monitorInterval="5">
     <Properties>
         <property name="LOG_PATTERN" value="[%level][%date{HH:mm:ss.SSS}][%thread] %msg%n"/>
-        <property name="FILE_PATH" value="../logs"/>
+        <property name="FILE_PATH" value="logs"/>
         <property name="FILE_NAME" value="asoul-aircraft-war"/>
     </Properties>
 
     <appenders>
         <console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_PATTERN}"/>
-            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
         </console>
 
-        <RollingFile name="RollingFileInfo" fileName="${FILE_PATH}/${FILE_NAME}.log"
+        <RollingFile name="RollingFile" fileName="${FILE_PATH}/${FILE_NAME}.log"
                      filePattern="${FILE_PATH}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
-            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
@@ -25,9 +23,9 @@
     </appenders>
 
     <loggers>
-        <root level="info">
+        <root level="INFO">
             <appender-ref ref="Console"/>
-            <appender-ref ref="RollingFileInfo"/>
+            <appender-ref ref="RollingFile"/>
         </root>
     </loggers>
 </configuration>

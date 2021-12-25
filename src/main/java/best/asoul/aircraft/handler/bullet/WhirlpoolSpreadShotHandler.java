@@ -23,12 +23,15 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 	private boolean shotTogether;
 	/** 子弹移动速度 **/
 	private int bulletSpeed;
+	/** 每颗子弹的射击间隔 **/
+	private long shotInterval;
 
 	public WhirlpoolSpreadShotHandler(double degreesOffset,
 			int turnCount,
 			long turnInterval,
 			boolean shotTogether,
-			int bulletSpeed) {
+			int bulletSpeed,
+			long shotInterval) {
 		super(Arrays.asList(AircraftCamp.ENEMY, AircraftCamp.BOSS), turnCount, turnInterval);
 		if (turnCount <= 0 && shotTogether) {
 			throw new IllegalArgumentException("齐射时发射轮数必须大于0");
@@ -37,6 +40,15 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 		this.degreesOffset = degreesOffset;
 		this.shotTogether = shotTogether;
 		this.bulletSpeed = bulletSpeed;
+		this.shotInterval = shotInterval;
+	}
+
+	public WhirlpoolSpreadShotHandler(double degreesOffset,
+			int turnCount,
+			long turnInterval,
+			boolean shotTogether,
+			int bulletSpeed) {
+		this(degreesOffset, turnCount, turnInterval, shotTogether, bulletSpeed, 0L);
 	}
 
 	@Override
@@ -82,6 +94,7 @@ public class WhirlpoolSpreadShotHandler extends ShotHandler {
 				bullet.getConfig().setSpeed(speed);
 			}
 			toRecoverySpeedBulletList.add(bullet);
+			AsoulUtil.pause(shotInterval);
 		}
 		return false;
 	}

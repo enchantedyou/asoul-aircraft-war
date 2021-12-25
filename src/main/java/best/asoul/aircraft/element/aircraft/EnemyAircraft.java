@@ -6,9 +6,9 @@ import best.asoul.aircraft.constant.ResourceConst;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.element.base.Bullet;
 import best.asoul.aircraft.entity.AircraftCamp;
+import best.asoul.aircraft.entity.BossType;
 import best.asoul.aircraft.handler.bullet.ShotToPlayerDirectionHandler;
 import best.asoul.aircraft.util.AsoulUtil;
-import best.asoul.aircraft.util.SoundUtil;
 
 /**
  * @Description 抽象的敌机
@@ -16,6 +16,9 @@ import best.asoul.aircraft.util.SoundUtil;
  * @Date 2021/11/20-16:28
  */
 public abstract class EnemyAircraft extends Aircraft {
+
+	/** boss类型 **/
+	private BossType bossType;
 
 	protected EnemyAircraft(String imageKey, Bullet bullet) {
 		super(imageKey, bullet);
@@ -59,8 +62,17 @@ public abstract class EnemyAircraft extends Aircraft {
 
 	@Override
 	public void afterDead() {
-		SoundUtil.playEnemyExplode();
+		// 飞机爆炸的动画和音效
+		explodeAfterDead();
 		// 敌机阵亡后概率出现增益效果
 		AsoulUtil.randCreateDriftBoost(this);
+	}
+
+	public BossType getBossType() {
+		return bossType;
+	}
+
+	public void setBossType(BossType bossType) {
+		this.bossType = bossType;
 	}
 }

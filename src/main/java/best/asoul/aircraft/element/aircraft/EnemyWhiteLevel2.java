@@ -19,7 +19,7 @@ public class EnemyWhiteLevel2 extends EnemyAircraft {
 	}
 
 	public EnemyWhiteLevel2() {
-		this(30000);
+		this(20000);
 	}
 
 	@Override

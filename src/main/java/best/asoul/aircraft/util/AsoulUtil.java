@@ -72,6 +72,10 @@ public class AsoulUtil {
 	 * @Date 2021/11/22-22:39
 	 */
 	public static void pause(long millis) {
+		if (millis <= 0L) {
+			return;
+		}
+
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
@@ -101,11 +105,11 @@ public class AsoulUtil {
 		}
 
 		DriftBoot driftBoot;
-		if (rand(30)) {
+		if (rand(40)) {
 			driftBoot = new BulletLevelUpDriftBoost(enemy);
 		} else if (rand(15)) {
 			driftBoot = new AircraftTreatmentDriftBoost(enemy);
-		} else if (rand(12)) {
+		} else if (rand(20)) {
 			driftBoot = new AircraftShieldDriftBoost(enemy);
 		} else {
 			driftBoot = new AvaDriftBoost(enemy);

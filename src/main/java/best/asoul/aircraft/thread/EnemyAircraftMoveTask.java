@@ -36,11 +36,7 @@ public class EnemyAircraftMoveTask implements Runnable {
 	public void run() {
 		AsoulThreadHelper.readyAwait();
 		// 战机移动
-		while (!Thread.currentThread().isInterrupted()) {
-			// 如果战机阵亡则结束当前战机的移动线程
-			if (aircraft.isDead()) {
-				break;
-			}
+		while (!Thread.currentThread().isInterrupted() && !aircraft.isDead()) {
 			AsoulUtil.enablePause();
 
 			final FlyingConfig aircraftConfig = aircraft.getConfig();

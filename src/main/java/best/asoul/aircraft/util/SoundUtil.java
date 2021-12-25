@@ -35,9 +35,7 @@ public class SoundUtil {
 		final Clip nowClip = SoundResourceFactory.getAudioClip(soundKey);
 		nowClip.loop(GlobalConst.BGM_LOOP_COUNT);
 		CLIP_LIST.add(nowClip);
-		while (!LAST_BGM_CLIP.compareAndSet(lastClip, nowClip)) {
-			AsoulUtil.pause(10L);
-		}
+		LAST_BGM_CLIP.getAndSet(nowClip);
 	}
 
 	private static void playSoundEffect(String energyRestored) {

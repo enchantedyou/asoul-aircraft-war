@@ -6,23 +6,17 @@ import java.util.List;
 
 import javax.swing.*;
 
-import best.asoul.aircraft.config.FlyingConfig;
 import best.asoul.aircraft.config.GlobalConfig;
-import best.asoul.aircraft.constant.GlobalConst;
 import best.asoul.aircraft.constant.ResourceConst;
 import best.asoul.aircraft.define.DefaultStageDefine;
 import best.asoul.aircraft.define.StageDefine;
 import best.asoul.aircraft.element.aircraft.AsoulAircraft;
 import best.asoul.aircraft.element.base.Aircraft;
 import best.asoul.aircraft.element.base.Bullet;
-import best.asoul.aircraft.element.boost.DriftBoot;
 import best.asoul.aircraft.element.bullet.AvaBullet;
 import best.asoul.aircraft.entity.AircraftCamp;
 import best.asoul.aircraft.entity.AnimationEffectPlayer;
-import best.asoul.aircraft.entity.AnimationType;
-import best.asoul.aircraft.factory.AnimationResourceFactory;
 import best.asoul.aircraft.factory.ImageResourceFactory;
-import best.asoul.aircraft.invoker.CollideAfterInvoker;
 import best.asoul.aircraft.listener.AircraftMouseListener;
 import best.asoul.aircraft.thread.ScreenRefreshTask;
 import best.asoul.aircraft.thread.base.AsoulThreadHelper;
@@ -71,24 +65,10 @@ public class StagePanel extends JPanel {
 		final List<Aircraft> playerList = stageDefine.getPlayerList();
 		drawAircraftList(g, enemyList, toBeRemovedAircraftList);
 		drawAircraftList(g, playerList, toBeRemovedAircraftList);
-
-		// 碰撞检测
-		collisionCheck(enemyList, playerList);
-		collisionCheck(toBeRemovedAircraftList, playerList);
 		// 绘制动画效果
 		playAnimation(g);
-		// 移除过期的增益效果
-		removeExpiredBoost(playerList);
-		// 移除已死亡且现存子弹数为0的战机
-		toBeRemovedAircraftList.removeIf(e -> e.getShotList().isEmpty());
 		/** 缓冲区绘制结束 **/
 		graphics.drawImage(bufferedImage, 0, 0, this);
-	}
-
-	private void removeExpiredBoost(List<Aircraft> playerList) {
-		for (Aircraft player : playerList) {
-			player.removeExpiredBoost();
-		}
 	}
 
 	private void playAnimation(Graphics2D g) {
@@ -101,100 +81,13 @@ public class StagePanel extends JPanel {
 		}
 	}
 
-	private void collisionCheck(List<Aircraft> enemyList, List<Aircraft> playerList) {
-		for (Aircraft player : playerList) {
-			final FlyingConfig playerConfig = player.getConfig();
-			final List<Bullet> playerShotList = player.getShotList();
-
-			// 增强效果拾取检查
-			checkBoostTrigger(player, playerConfig);
-			for (Aircraft enemy : enemyList) {
-				final FlyingConfig enemyConfig = enemy.getConfig();
-				final List<Bullet> enemyShotList = enemy.getShotList();
-				// 检查敌我战机碰撞以及玩家子弹命中
-				checkCollisionAndPlayerShot(player, playerConfig, playerShotList, enemy, enemyConfig);
-
-				for (Bullet enemyBullet : enemyShotList) {
-					// 敌机子弹击中玩家
-					doCollisionCheck(player.getImage(), enemyBullet.getImage(), playerConfig, enemyBullet.getConfig(),
-							() -> {
-								// 玩家扣血
-								player.deductHealthPoint(enemyBullet);
-								// 移除子弹
-								enemyShotList.remove(enemyBullet);
-							});
-				}
-			}
-		}
-	}
-
-	private void checkCollisionAndPlayerShot(Aircraft player, FlyingConfig playerConfig, List<Bullet> playerShotList,
-			Aircraft enemy, FlyingConfig enemyConfig) {
-		if (!enemy.isDead()) {
-			// 飞机碰撞->玩家扣血
-			doCollisionCheck(player.getImage(), enemy.getImage(), playerConfig, enemyConfig,
-					() -> player.deductHealthPointCollision(
-							enemy.getCamp() == AircraftCamp.BOSS ? GlobalConst.COLLISION_DEDUCT_BOSS
-									: GlobalConst.COLLISION_DEDUCT_NORMAL));
-			for (Bullet playerBullet : playerShotList) {
-				// 玩家子弹击中敌机
-				doCollisionCheck(playerBullet.getImage(), enemy.getImage(), playerBullet.getConfig(),
-						enemyConfig,
-						() -> {
-							// 敌机扣血
-							enemy.deductHealthPoint(playerBullet);
-							// 移除子弹
-							playerShotList.remove(playerBullet);
-						});
-			}
-		}
-	}
-
-	private void checkBoostTrigger(Aircraft player, FlyingConfig playerConfig) {
-		for (DriftBoot driftBoot : stageDefine.getDriftBootList()) {
-			// 玩家拾取到增益效果
-			doCollisionCheck(player.getImage(), driftBoot.getImage(), playerConfig, driftBoot.getConfig(),
-					() -> driftBoot.boostTrigger(player));
-		}
-	}
-
-	private void doCollisionCheck(BufferedImage playerImage, BufferedImage enemyImage, FlyingConfig playerConfig,
-			FlyingConfig enemyConfig,
-			CollideAfterInvoker collideAfterInvoker) {
-		// 计算真正的需要判定的矩形x、y轴坐标，图片的大小不等于实际上想要的子弹、飞机大小
-		int playerX = playerConfig.getX() + playerImage.getWidth() / 2 - playerConfig.getWidth() / 2;
-		int playerY = playerConfig.getY() + playerImage.getHeight() / 2 - playerConfig.getHeight() / 2;
-		int enemyX = enemyConfig.getX() + enemyImage.getWidth() / 2 - enemyConfig.getWidth() / 2;
-		int enemyY = enemyConfig.getY() + enemyImage.getHeight() / 2 - enemyConfig.getHeight() / 2;
-
-		// 这个地方没考虑到子弹倾角的问题，但是不知道咋改，所以摆烂了
-		final Rectangle playerRectangle = new Rectangle(playerX, playerY, playerConfig.getWidth(),
-				playerConfig.getHeight());
-		final Rectangle enemyRectangle = new Rectangle(enemyX, enemyY, enemyConfig.getWidth(), enemyConfig.getHeight());
-
-		if (playerRectangle.intersects(enemyRectangle) && collideAfterInvoker != null) {
-			collideAfterInvoker.invoke();
-		}
-	}
-
 	private void drawAircraftList(Graphics2D g, List<Aircraft> aircraftList, List<Aircraft> toBeMovedAircraftList) {
 		for (Aircraft aircraft : aircraftList) {
-			if (aircraft.isDead() && !toBeMovedAircraftList.contains(aircraft)) {
-				aircraftList.remove(aircraft);
-				toBeMovedAircraftList.add(aircraft);
-				// 飞机爆炸的动画和音效
-				final AnimationEffectPlayer effectPlayer = AnimationResourceFactory
-						.buildAnimationPlayer(AnimationType.AIRCRAFT_EXPLODE, aircraft);
-				stageDefine.getEffectList().add(effectPlayer);
-				// 阵亡后处理
-				aircraft.afterDead();
+			// 绘制血条
+			if (aircraft.getCamp() == AircraftCamp.ASOUL) {
+				JFrameUtil.drawBlood(g, 60, 28, aircraft);
 			} else {
-				// 绘制血条
-				if (aircraft.getCamp() == AircraftCamp.ASOUL) {
-					JFrameUtil.drawBlood(g, 60, 28, aircraft);
-				} else {
-					JFrameUtil.drawBlood(g, 0, aircraft.getImage().getHeight() + 10, aircraft);
-				}
+				JFrameUtil.drawBlood(g, 0, aircraft.getImage().getHeight() + 10, aircraft);
 			}
 			doDrawAircraft(g, aircraft);
 		}

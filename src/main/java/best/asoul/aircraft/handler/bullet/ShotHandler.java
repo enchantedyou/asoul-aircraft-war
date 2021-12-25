@@ -62,11 +62,11 @@ public abstract class ShotHandler implements Serializable {
 		int y = 0;
 		// 指定子弹的初始位置
 		if (aircraft.getCamp() == AircraftCamp.ASOUL) {
-			y = aircraftConfig.getY() - bulletImage.getHeight() + 120;
+			y = aircraftConfig.getY() - bulletImage.getHeight() + 80;
 		} else if (aircraft.getCamp() == AircraftCamp.ENEMY) {
 			y = aircraftConfig.getY() + aircraftImage.getHeight() + 10;
 		} else if (aircraft.getCamp() == AircraftCamp.BOSS) {
-			y = aircraftConfig.getY() + aircraftImage.getHeight() - 105;
+			y = aircraftConfig.getY() + aircraftImage.getHeight() - 80;
 			x += 30;
 		}
 		bullet.moveTo(x, y);
@@ -104,7 +104,8 @@ public abstract class ShotHandler implements Serializable {
 		return beforeNextHandleInvoker;
 	}
 
-	public void setBeforeNextHandleInvoker(Invoker beforeNextHandleInvoker) {
+	public ShotHandler setBeforeNextHandleInvoker(Invoker beforeNextHandleInvoker) {
 		this.beforeNextHandleInvoker = beforeNextHandleInvoker;
+		return this;
 	}
 }
