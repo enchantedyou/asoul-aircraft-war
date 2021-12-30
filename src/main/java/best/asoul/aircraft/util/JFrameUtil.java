@@ -73,7 +73,7 @@ public class JFrameUtil {
 			// 玩家的子弹朝上，所以反转
 			degrees += GlobalConst.MAX_QUADRANT_DEGREES * 2;
 			// 玩家子弹透明度（暴走时变亮一点）
-			float alpha = aircraft.getBulletLevel() < GlobalConst.ENERGY_RESTORED_LEVEL ? 0.8f : 0.9f;
+			float alpha = aircraft.getBulletLevel() < GlobalConst.ENERGY_RESTORED_LEVEL ? 0.6f : 0.7f;
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		}
 		BufferedImage image = rotateImage(bullet.getImage(), degrees);
@@ -89,7 +89,7 @@ public class JFrameUtil {
 	 * @return double
 	 */
 	public static double getFixedDegrees(double degrees) {
-		while (degrees < 0D && degrees <= GlobalConst.DEGREES_OF_CIRCLE) {
+		while (degrees < 0D) {
 			degrees += GlobalConst.DEGREES_OF_CIRCLE;
 		}
 		return degrees % GlobalConst.DEGREES_OF_CIRCLE;

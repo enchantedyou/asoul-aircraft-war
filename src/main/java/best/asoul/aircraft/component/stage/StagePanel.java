@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StagePanel extends JPanel {
 
-	private transient StageDefine stageDefine = new DefaultStageDefine();
+	private final transient StageDefine stageDefine = new DefaultStageDefine();
 
 	public StagePanel() {
 		// 生成玩家战机
@@ -61,10 +61,15 @@ public class StagePanel extends JPanel {
 		// 待移除战机列表
 		final List<Aircraft> toBeRemovedAircraftList = stageDefine.getToBeRemovedAircraftList();
 		final List<Aircraft> enemyList = stageDefine.getEnemyList();
-		// 玩家的战机放到后面再画以保证图层在最上面
 		final List<Aircraft> playerList = stageDefine.getPlayerList();
-		drawAircraftList(g, enemyList, toBeRemovedAircraftList);
-		drawAircraftList(g, playerList, toBeRemovedAircraftList);
+
+		//绘制战机和子弹，优先级（优先越低的越先画）：玩家战机->敌方子弹->玩家子弹->敌方战机
+		drawAircraft(g, enemyList);
+		drawBullet(g, playerList);
+		drawBullet(g, enemyList);
+		drawAircraft(g, playerList);
+		drawBullet(g, toBeRemovedAircraftList);
+
 		// 绘制动画效果
 		playAnimation(g);
 		/** 缓冲区绘制结束 **/
@@ -81,7 +86,7 @@ public class StagePanel extends JPanel {
 		}
 	}
 
-	private void drawAircraftList(Graphics2D g, List<Aircraft> aircraftList, List<Aircraft> toBeMovedAircraftList) {
+	private void drawAircraft(Graphics2D g, List<Aircraft> aircraftList) {
 		for (Aircraft aircraft : aircraftList) {
 			// 绘制血条
 			if (aircraft.getCamp() == AircraftCamp.ASOUL) {
@@ -89,21 +94,16 @@ public class StagePanel extends JPanel {
 			} else {
 				JFrameUtil.drawBlood(g, 0, aircraft.getImage().getHeight() + 10, aircraft);
 			}
-			doDrawAircraft(g, aircraft);
-		}
-
-		// 绘制待移除战机列表里面的子弹
-		for (Aircraft aircraft : toBeMovedAircraftList) {
-			doDrawAircraft(g, aircraft);
+			// 绘制战机
+			JFrameUtil.drawAircraft(g, aircraft);
 		}
 	}
 
-	private void doDrawAircraft(Graphics2D g, Aircraft aircraft) {
-		// 绘制战机
-		JFrameUtil.drawAircraft(g, aircraft);
-		// 绘制子弹
-		for (Bullet bullet : aircraft.getShotList()) {
-			JFrameUtil.drawBullet(g, bullet, aircraft);
+	private void drawBullet(Graphics2D g, List<Aircraft> aircraftList) {
+		for (Aircraft aircraft : aircraftList) {
+			for (Bullet bullet : aircraft.getShotList()) {
+				JFrameUtil.drawBullet(g, bullet, aircraft);
+			}
 		}
 	}
 
